@@ -35,16 +35,28 @@ class CalendarDemoPage extends StatelessWidget {
         end: DateTime.now().subtract(const Duration(days: 1)),
       ),
       CalendarEvent(
+        id: "2.5",
+        title: 'Calling with team',
+        start: DateTime.now().add(const Duration(days: 2)),
+        end: DateTime.now().add(const Duration(days: 2)),
+      ),
+      CalendarEvent(
         id: "2",
         title: 'Doctor appointment',
         start: DateTime.now().add(const Duration(days: 2)),
         end: DateTime.now().add(const Duration(days: 2)),
       ),
       CalendarEvent(
+        id: "2.6",
+        title: 'Calling appointment',
+        start: DateTime.now().add(const Duration(days: 2)),
+        end: DateTime.now().add(const Duration(days: 2)),
+      ),
+      CalendarEvent(
         id: "3",
         title: 'Project deadline',
-        start: DateTime.now().add(const Duration(days: 7)),
-        end: DateTime.now().add(const Duration(days: 7)),
+        start: DateTime.now().add(const Duration(days: 3, hours: 1)),
+        end: DateTime.now().add(const Duration(days: 3, hours: 1)),
       ),
     ];
 

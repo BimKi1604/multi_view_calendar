@@ -1,71 +1,131 @@
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/data/calendar_event.dart';
+import 'package:multi_view_calendar/src/data/day_data.dart';
+import 'package:multi_view_calendar/src/utils/click_utils.dart';
 
-class DayView extends StatelessWidget {
+class DayView extends StatefulWidget {
   final DateTime date;
   final List<CalendarEvent> events;
+  final bool showTimeLabels;
 
   const DayView({
     super.key,
     required this.date,
     required this.events,
+    this.showTimeLabels = true,
   });
 
   @override
+  State<DayView> createState() => _DayViewState();
+}
+
+class _DayViewState extends State<DayView> {
+  List<DayData> dayData = List.generate(24, (hour) => DayData(hour));
+
+  void expandDay(DayData data) {
+    if (mounted) {
+      setState(() {
+        data.valueExpand = !data.isExpand;
+      });
+    }
+
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final dayEvents = events
-        .where((e) =>
-    e.start.day == date.day &&
-        e.start.month == date.month &&
-        e.start.year == date.year)
-        .toList()
-      ..sort((a, b) => a.start.compareTo(b.start));
 
     return SizedBox(
-      width: MediaQuery.sizeOf(context).width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: Text(
-              '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          // Header
+          Container(
+            padding: const EdgeInsets.all(8),
+            color: Colors.grey[200],
+            child: Center(
+              child: Text(
+                '${_weekdayLabel(widget.date.weekday)}\n${widget.date.day}/${widget.date.month}',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ),
-          dayEvents.isEmpty
-              ? const Center(child: Text("No events"))
-              : SizedBox(
-            height: MediaQuery.sizeOf(context).height * .1,
-                child: ListView.builder(
-                            itemCount: dayEvents.length,
-                            itemBuilder: (context, index) {
-                final event = dayEvents[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  child: ListTile(
-                    title: Text(event.title),
-                    subtitle: Text(
-                      '${_formatTime(event.start)} - ${_formatTime(event.end)}',
+
+          // Time slots
+          Column(
+            children: dayData.map((data) {
+              final hourEvents = widget.events.where((event) => event.start.hour == data.hour).toList();
+              if (hourEvents.length > 2 && !data.isExpand) {
+                return Container(
+                  height: 60,
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.grey, width: 0.5),
                     ),
-                    trailing: event.color != null
-                        ? CircleAvatar(
-                      radius: 6,
-                      backgroundColor: Color(event.color ?? 0xFF000000),
-                    )
-                        : null,
+                  ),
+                  padding: const EdgeInsets.all(4),
+                  margin: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: ClickUtils(
+                    onTap: (){
+                      expandDay(data);
+                    },
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("${hourEvents.length} events", style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700)),
+                        const Icon(Icons.expand, size: 16)
+                      ],
+                    ),
                   ),
                 );
-                            },
-                          ),
-              ),
+              }
+              return Visibility(
+                visible: hourEvents.length <= 2 || data.isExpand,
+                child: Container(
+                  height: 60,
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(color: Colors.grey, width: 0.5),
+                    ),
+                  ),
+                  padding: const EdgeInsets.all(4),
+                  child: ClickUtils(
+                    enable: hourEvents.length > 2,
+                    onTap: (){
+                      expandDay(data);
+                    },
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: hourEvents.map((event) {
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 2),
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.lightBlue.shade100,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              event.title,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
         ],
       ),
     );
   }
 
-  String _formatTime(DateTime time) {
-    return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+  String _weekdayLabel(int weekday) {
+    const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    return labels[(weekday - 1) % 7];
   }
 }
