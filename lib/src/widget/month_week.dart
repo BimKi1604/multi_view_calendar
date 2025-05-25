@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:multi_view_calendar/src/data/calendar_event.dart';
+import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/utils/date_utils.dart';
 
 class MonthView extends StatelessWidget {

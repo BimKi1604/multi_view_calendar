@@ -13,3 +13,8 @@ List<DateTime> daysInMonthGrid(DateTime firstDayOfMonth) {
         (index) => start.add(Duration(days: index)),
   );
 }
+
+String weekdayLabel(int weekday) {
+  const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  return labels[(weekday - 1) % 7];
+}
