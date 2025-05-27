@@ -4,7 +4,7 @@ import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/utils/date_utils.dart';
 import 'package:multi_view_calendar/src/widget/day_view.dart';
 
-class WeekView extends StatelessWidget {
+class WeekView extends StatefulWidget {
   final DateTime weekStartDate;
   final List<CalendarEvent> events;
 
@@ -15,10 +15,34 @@ class WeekView extends StatelessWidget {
   });
 
   @override
+  State<WeekView> createState() => _WeekViewState();
+}
+
+class _WeekViewState extends State<WeekView> {
+
+  ScrollController controller = ScrollController();
+  ScrollController bodyController = ScrollController();
+
+  @override
+  void initState() {
+    bodyController.addListener(() {
+      controller.jumpTo(bodyController.offset);
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    bodyController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final days = List.generate(
       7,
-          (index) => weekStartDate.add(Duration(days: index)),
+          (index) => widget.weekStartDate.add(Duration(days: index)),
     );
 
     return Column(
@@ -35,42 +59,75 @@ class WeekView extends StatelessWidget {
 
         // Grid: Time column + Scrollable Day columns
         Expanded(
-          child: Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Left Time Column
-                  _buildTimeColumn(),
-
-                  // Scrollable horizontal day columns
-                  Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: days.map((day) {
-                          final dayEvents = events.where((e) =>
-                          e.start.year == day.year &&
-                              e.start.month == day.month &&
-                              e.start.day == day.day).toList();
-                          return RepaintBoundary(
-                            child: SizedBox(
-                              width: DataApp.widthEvent,
-                              child: DayView(
-                                date: day,
-                                events: dayEvents,
-                                showTimeLabels: false,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                ],
+          child: Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(left: DataApp.widthTimeColumn),
+                height: DataApp.heightEvent,
+                width: MediaQuery.sizeOf(context).width,
+                child: ListView.builder(
+                    controller: controller,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 7,
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    itemBuilder: (_, index) {
+                      final date = days[index];
+                      return Container(
+                        height: DataApp.heightEvent,
+                        width: DataApp.widthEvent,
+                        padding: const EdgeInsets.all(8),
+                        color: Colors.grey[200],
+                        child: Center(
+                          child: Text(
+                            '${weekdayLabel(date.weekday)}\n${date.day}/${date.month}',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      );
+                    }
+                ),
               ),
-            ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Left Time Column
+                      _buildTimeColumn(),
+
+                      // Scrollable horizontal day columns
+                      Expanded(
+                        child: SingleChildScrollView(
+                          controller: bodyController,
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: days.map((day) {
+                              final dayEvents = widget.events.where((e) =>
+                              e.start.year == day.year &&
+                                  e.start.month == day.month &&
+                                  e.start.day == day.day).toList();
+                              return RepaintBoundary(
+                                child: SizedBox(
+                                  width: DataApp.widthEvent,
+                                  child: DayView(
+                                    date: day,
+                                    events: dayEvents,
+                                    showTimeLabels: false,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],

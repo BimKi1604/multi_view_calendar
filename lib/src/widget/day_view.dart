@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
@@ -23,14 +24,17 @@ class DayView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header
-          Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.grey[200],
-            child: Center(
-              child: Text(
-                '${weekdayLabel(date.weekday)}\n${date.day}/${date.month}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+          Visibility(
+            visible: showTimeLabels,
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              color: Colors.grey[200],
+              child: Center(
+                child: Text(
+                  '${weekdayLabel(date.weekday)}\n${date.day}/${date.month}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
