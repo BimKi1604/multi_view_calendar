@@ -38,12 +38,17 @@ class _WeekViewState extends State<WeekView> {
     super.dispose();
   }
 
+  bool isSameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
   @override
   Widget build(BuildContext context) {
     final days = List.generate(
       7,
           (index) => widget.weekStartDate.add(Duration(days: index)),
     );
+
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,17 +110,17 @@ class _WeekViewState extends State<WeekView> {
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             children: days.map((day) {
-                              final dayEvents = widget.events.where((e) =>
-                              e.start.year == day.year &&
-                                  e.start.month == day.month &&
-                                  e.start.day == day.day).toList();
+                              final dayEvents = widget.events.where((e) => isSameDay(e.start, day)).toList();
+                              print('Events count: ${widget.events.length}');
+                              for (var e in widget.events) {
+                                print('${e.title}: ${e.start} - ${e.end}');
+                              }
                               return RepaintBoundary(
                                 child: SizedBox(
                                   width: DataApp.widthEvent,
                                   child: DayView(
                                     date: day,
                                     events: dayEvents,
-                                    showTimeLabels: false,
                                   ),
                                 ),
                               );
