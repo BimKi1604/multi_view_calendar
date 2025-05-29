@@ -111,10 +111,10 @@ class _WeekViewState extends State<WeekView> {
                           child: Row(
                             children: days.map((day) {
                               final dayEvents = widget.events.where((e) => isSameDay(e.start, day)).toList();
-                              print('Events count: ${widget.events.length}');
-                              for (var e in widget.events) {
-                                print('${e.title}: ${e.start} - ${e.end}');
-                              }
+                              // print('Events count: ${widget.events.length}');
+                              // for (var e in widget.events) {
+                              //   print('${e.title}: ${e.start} - ${e.end}');
+                              // }
                               return RepaintBoundary(
                                 child: SizedBox(
                                   width: DataApp.widthEvent,
