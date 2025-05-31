@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/position_event.dart';
+import 'package:multi_view_calendar/src/utils/time_utils.dart';
 import 'package:multi_view_calendar/src/widget/day_view_event_tile.dart';
 
 class DayView extends StatelessWidget {
@@ -46,29 +47,46 @@ class DayView extends StatelessWidget {
 
   List<PositionedEvent> _calculateEventPositions(List<CalendarEvent> events) {
     final List<PositionedEvent> positioned = [];
-    final double minuteHeight = DataApp.heightEvent / 60;
+    final double minuteHeight = DataApp.heightEvent / 60; /// height pixel each minute
     final List<List<CalendarEvent>> groups = _groupOverlappingEvents(events);
 
-    if (groups.isEmpty) return [];
+    if (groups.isEmpty) return positioned;
     if (groups.length == 1) {
       final group = groups.first;
       for (int i = 0; i < group.length; i++) {
         final event = group[i];
         final int startMinutes = event.start.hour * 60 + event.start.minute;
-        final int endMinutes = event.end.hour * 60 + event.end.minute;
+        final int endMinutes = (TimeUtils.isPassDay(event.start, event.end) ? (24 + event.end.difference(event.start).inHours.abs()) : event.end.hour) * 60 + event.end.minute;
         final double top = startMinutes * minuteHeight;
         final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
-        final double width = DataApp.widthEvent / group.length;
-        final double left = i * width;
 
         positioned.add(PositionedEvent(
           events: [event],
           top: top,
           height: height,
-          left: left,
-          width: width,
+          left: 0,
+          width: DataApp.widthEvent,
         ));
+        /// case pass day
+        if (event.start.day < event.end.day) {
+          final DateTime end = event.end;
+          final int overMinutes = end.difference(DateTime(end.year,end.month, end.day, 0, 0)).inMinutes.abs();
+          final int minutes = overMinutes % 60;
+          final int hours = overMinutes ~/ 60;
+          const int startMinutes = 0;
+          final int endMinutes = hours * 60 + minutes;
+          const double top = 0;
+          final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
+          positioned.add(PositionedEvent(
+            events: [event],
+            top: top,
+            height: height,
+            left: 0,
+            width: DataApp.widthEvent,
+          ));
+        }
       }
+      return positioned;
     }
     List<CalendarEvent> eventsList = List.empty(growable: true);
 
@@ -76,11 +94,9 @@ class DayView extends StatelessWidget {
       for (int i = 0; i < group.length; i++) {
         final event = group[i];
         final int startMinutes = event.start.hour * 60 + event.start.minute;
-        final int endMinutes = event.end.hour * 60 + event.end.minute;
+        final int endMinutes = (TimeUtils.isPassDay(event.start, event.end) ? (24 + event.end.difference(event.start).inHours.abs()) : event.end.hour) * 60 + event.end.minute;
         final double top = startMinutes * minuteHeight;
         final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
-        final double width = DataApp.widthEvent / group.length;
-        final double left = i * width;
 
         eventsList.add(group[i]);
 
@@ -88,9 +104,27 @@ class DayView extends StatelessWidget {
           events: eventsList,
           top: top,
           height: height,
-          left: left,
-          width: width,
+          left: 0,
+          width: DataApp.widthEvent,
         ));
+        /// case pass day
+        if (event.start.day < event.end.day) {
+          final DateTime end = event.end;
+          final int overMinutes = end.difference(DateTime(end.year,end.month, end.day, 0, 0)).inMinutes.abs();
+          final int minutes = overMinutes % 60;
+          final int hours = overMinutes ~/ 60;
+          const int startMinutes = 0;
+          final int endMinutes = hours * 60 + minutes;
+          const double top = 0;
+          final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
+          positioned.add(PositionedEvent(
+            events: [event],
+            top: top,
+            height: height,
+            left: 0,
+            width: DataApp.widthEvent,
+          ));
+        }
       }
     }
     return positioned;
@@ -118,6 +152,7 @@ class DayView extends StatelessWidget {
   }
 
   bool _eventsOverlap(CalendarEvent a, CalendarEvent b) { /// check event overlap
+    if (!DateUtils.isSameDay(a.start, b.start)) return false;
     return a.start.isBefore(b.end) && b.start.isBefore(a.end);
   }
 }

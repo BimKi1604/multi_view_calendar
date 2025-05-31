@@ -29,6 +29,11 @@ class TimeUtils {
     return DateUtils.isSameDay(now, day);
   }
 
+  static bool isPassDay(DateTime a, DateTime b) {
+    if (a.day != b.day) return true;
+    return false;
+  }
+
   static double get currentTimeTop {
     final now = DateTime.now();
     final minutes = now.hour * 60 + now.minute;

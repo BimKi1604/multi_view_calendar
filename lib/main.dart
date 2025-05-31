@@ -59,10 +59,24 @@ class CalendarDemoPage extends StatelessWidget {
       ),
       CalendarEvent(
         id: "4",
+        title: 'Test event pass day',
+        color: Colors.lightBlueAccent,
+        start: DateTime(now.year, now.month, now.day, 23, 15),
+        end: DateTime(now.year, now.month, now.day + 1, 0, 30),
+      ),
+      CalendarEvent(
+        id: "6",
+        title: 'Test event pass day 2',
+        color: Colors.lightBlueAccent,
+        start: DateTime(now.year, now.month, now.day + 1, 23, 30),
+        end: DateTime(now.year, now.month, now.day + 2, 4, 30),
+      ),
+      CalendarEvent(
+        id: "5",
         title: 'Test event',
         color: Colors.lightBlueAccent,
-        start: DateTime(now.year, now.month, now.day, 9, 15),
-        end: DateTime(now.year, now.month, now.day, 10, 30),
+        start: DateTime(now.year, now.month, now.day + 4, 23, 15),
+        end: DateTime(now.year, now.month, now.day + 4, 23, 45),
       ),
     ];
 

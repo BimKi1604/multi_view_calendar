@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
@@ -130,44 +128,44 @@ class _WeekViewState extends State<WeekView> {
               ),
               Expanded(
                 child: SingleChildScrollView(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Stack(
                     children: [
-                      // Left Time Column
-                      _buildTimeColumn(),
+                      Positioned(
+                        top: TimeUtils.currentTimeTop - 3,
+                        left: DataApp.widthTimeColumn - 11,
+                        right: 0,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 10,
+                              height: 10,
+                              decoration: BoxDecoration(
+                                color: DataApp.iconColor,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 1.5,
+                                color: DataApp.iconColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Left Time Column
+                          _buildTimeColumn(),
 
-                      // Scrollable horizontal day columns
-                      Expanded(
-                        child: SingleChildScrollView(
-                          controller: bodyController,
-                          scrollDirection: Axis.horizontal,
-                          child: RepaintBoundary(
-                            child: Stack(
-                              children: [
-                                Positioned(
-                                  top: TimeUtils.currentTimeTop,
-                                  left: 0,
-                                  right: 0,
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        width: 10,
-                                        height: 10,
-                                        decoration: BoxDecoration(
-                                          color: DataApp.iconColor,
-                                          shape: BoxShape.circle,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          height: 1.5,
-                                          color: DataApp.iconColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Row(
+                          // Scrollable horizontal day columns
+                          Expanded(
+                            child: SingleChildScrollView(
+                              controller: bodyController,
+                              scrollDirection: Axis.horizontal,
+                              child: RepaintBoundary(
+                                child: Row(
                                   children: days.map((day) {
                                     final dayEvents = widget.events.where((e) => isSameDay(e.start, day)).toList();
                                     return Container(
@@ -187,10 +185,10 @@ class _WeekViewState extends State<WeekView> {
                                     );
                                   }).toList(),
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
@@ -207,7 +205,7 @@ class _WeekViewState extends State<WeekView> {
     final hours = List.generate(24, (index) => index);
     return Container(
       width: DataApp.widthTimeColumn,
-      padding: const EdgeInsets.only(right: 5.0),
+      padding: const EdgeInsets.only(right: 10.0),
       decoration: BoxDecoration(
         border: Border(
           right: BorderSide(
