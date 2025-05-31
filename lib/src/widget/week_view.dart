@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
@@ -116,7 +117,7 @@ class _WeekViewState extends State<WeekView> {
                                 Visibility(
                                   visible: TimeUtils.isToday(date),
                                     child: ShowUtils.eventWidget(
-                                      child: const Icon(Icons.today, color: Colors.white, size: 11,)
+                                      child: Icon(Icons.today, color: DataApp.iconColor, size: 11,)
                                     )
                                 )
                               ],
@@ -140,13 +141,36 @@ class _WeekViewState extends State<WeekView> {
                         child: SingleChildScrollView(
                           controller: bodyController,
                           scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: days.map((day) {
-                              final dayEvents = widget.events.where((e) => isSameDay(e.start, day)).toList();
-                              return RepaintBoundary(
-                                child: Stack(
-                                  children: [
-                                    Container(
+                          child: RepaintBoundary(
+                            child: Stack(
+                              children: [
+                                Positioned(
+                                  top: TimeUtils.currentTimeTop,
+                                  left: 0,
+                                  right: 0,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 10,
+                                        height: 10,
+                                        decoration: BoxDecoration(
+                                          color: DataApp.iconColor,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          height: 1.5,
+                                          color: DataApp.iconColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Row(
+                                  children: days.map((day) {
+                                    final dayEvents = widget.events.where((e) => isSameDay(e.start, day)).toList();
+                                    return Container(
                                       width: DataApp.widthEvent,
                                       decoration: BoxDecoration(
                                         border: Border(
@@ -160,21 +184,11 @@ class _WeekViewState extends State<WeekView> {
                                         date: day,
                                         events: dayEvents,
                                       ),
-                                    ),
-                                    if (TimeUtils.isToday(day))
-                                      Positioned(
-                                        top: TimeUtils.currentTimeTop,
-                                        left: 0,
-                                        right: 0,
-                                        child: Container(
-                                          height: 1.5,
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                  ],
+                                    );
+                                  }).toList(),
                                 ),
-                              );
-                            }).toList(),
+                              ],
+                            ),
                           ),
                         ),
                       ),

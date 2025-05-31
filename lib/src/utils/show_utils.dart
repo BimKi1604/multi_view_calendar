@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 
 /// class helper for show widget
@@ -8,7 +9,8 @@ class ShowUtils {
     return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(width: 1.5, color: Colors.white)
+        color: Colors.white,
+        border: Border.all(width: 1.5, color: DataApp.iconColor)
       ),
       width: size ?? 21,
       alignment: Alignment.center,

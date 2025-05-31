@@ -32,7 +32,8 @@ class TimeUtils {
   static double get currentTimeTop {
     final now = DateTime.now();
     final minutes = now.hour * 60 + now.minute;
-    return minutes * DataApp.heightEvent;
+    final minutesHeight = DataApp.heightEvent / 60; /// pixel each minute
+    return minutes * minutesHeight;
   }
 }
 
