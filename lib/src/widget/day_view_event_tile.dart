@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/models/position_event.dart';
+import 'package:multi_view_calendar/src/utils/show_utils.dart';
 
 class DayViewEventTile extends StatelessWidget {
   final PositionedEvent positionedEvent;
 
   const DayViewEventTile({super.key, required this.positionedEvent});
 
+  String title(){
+   if (positionedEvent.events.length == 1) return positionedEvent.events.first.title;
+   String title = "";
+   for (final event in positionedEvent.events) {
+     title += "${event.title}\n";
+   }
+   return title;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final event = positionedEvent.event;
+    final event = positionedEvent.events;
     return Positioned(
       top: positionedEvent.top,
       left: positionedEvent.left,
@@ -26,7 +36,7 @@ class DayViewEventTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
           ),
           child: Text(
-            event.title,
+            title(),
             style: const TextStyle(color: Colors.white, fontSize: 12),
           ),
         ),
@@ -34,35 +44,20 @@ class DayViewEventTile extends StatelessWidget {
     );
   }
 
-  void _showTooltip(BuildContext context, CalendarEvent event) {
-    final text = 'From: ${event.start.hour}:${event.start.minute.toString().padLeft(2, '0')}\n'
-        'To: ${event.end.hour}:${event.end.minute.toString().padLeft(2, '0')}';
-
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        title: Text(event.title),
-        content: Text(text),
-      ),
-    );
+  void _showTooltip(BuildContext context, List<CalendarEvent> events) {
+    if (events.length == 1) {
+      ShowUtils.tooltipSingleEvent(context, events.first);
+      return;
+    }
+    ShowUtils.tooltipMulEvent(context, events);
   }
 
-  void _showEventDetails(BuildContext context, CalendarEvent event) {
-    showModalBottomSheet(
-      context: context,
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(event.title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Text('Start: ${event.start}'),
-            Text('End: ${event.end}'),
-          ],
-        ),
-      ),
-    );
+  void _showEventDetails(BuildContext context, List<CalendarEvent> events) {
+    if (events.length == 1) {
+      ShowUtils.showSingleEventDetails(context, events.first);
+      return;
+    }
+    ShowUtils.showEventsDetails(context, events);
   }
+
 }

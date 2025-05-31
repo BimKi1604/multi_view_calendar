@@ -50,26 +50,49 @@ class DayView extends StatelessWidget {
     final List<List<CalendarEvent>> groups = _groupOverlappingEvents(events);
 
     if (groups.isEmpty) return [];
+    if (groups.length == 1) {
+      final group = groups.first;
+      for (int i = 0; i < group.length; i++) {
+        final event = group[i];
+        final int startMinutes = event.start.hour * 60 + event.start.minute;
+        final int endMinutes = event.end.hour * 60 + event.end.minute;
+        final double top = startMinutes * minuteHeight;
+        final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
+        final double width = DataApp.widthEvent / group.length;
+        final double left = i * width;
 
-    final group = groups.first;
-    for (int i = 0; i < group.length; i++) {
-      final event = group[i];
-      final int startMinutes = event.start.hour * 60 + event.start.minute;
-      final int endMinutes = event.end.hour * 60 + event.end.minute;
-      final double top = startMinutes * minuteHeight;
-      final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
-      final double width = DataApp.widthEvent / group.length;
-      final double left = i * width;
-
-      positioned.add(PositionedEvent(
-        event: event,
-        top: top,
-        height: height,
-        left: left,
-        width: width,
-      ));
+        positioned.add(PositionedEvent(
+          events: [event],
+          top: top,
+          height: height,
+          left: left,
+          width: width,
+        ));
+      }
     }
+    List<CalendarEvent> eventsList = List.empty(growable: true);
 
+    for (final group in groups) {
+      for (int i = 0; i < group.length; i++) {
+        final event = group[i];
+        final int startMinutes = event.start.hour * 60 + event.start.minute;
+        final int endMinutes = event.end.hour * 60 + event.end.minute;
+        final double top = startMinutes * minuteHeight;
+        final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
+        final double width = DataApp.widthEvent / group.length;
+        final double left = i * width;
+
+        eventsList.add(group[i]);
+
+        positioned.add(PositionedEvent(
+          events: eventsList,
+          top: top,
+          height: height,
+          left: left,
+          width: width,
+        ));
+      }
+    }
     return positioned;
   }
 
