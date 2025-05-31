@@ -24,9 +24,9 @@ class ShowUtils {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 5.0),
-          Text(event.title, style: const TextStyle(fontSize: 23, fontWeight: FontWeight.w700)),
+          Text(event.title, style: const TextStyle(fontSize: 23, fontWeight: FontWeight.bold)),
           const SizedBox(height: 10.0),
-          Text(text, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w400)),
+          Text(text, style: const TextStyle(fontSize: 18)),
         ],
       )];
     }
