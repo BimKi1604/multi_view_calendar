@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
-import 'package:multi_view_calendar/src/utils/date_utils.dart';
+import 'package:multi_view_calendar/src/utils/show_utils.dart';
+import 'package:multi_view_calendar/src/utils/time_utils.dart';
 import 'package:multi_view_calendar/src/widget/day_view.dart';
 
 class WeekView extends StatefulWidget {
@@ -22,11 +25,16 @@ class _WeekViewState extends State<WeekView> {
 
   ScrollController controller = ScrollController();
   ScrollController bodyController = ScrollController();
+  DateTime now = DateTime.now();
+  late final Timer _timer;
 
   @override
   void initState() {
     bodyController.addListener(() {
       controller.jumpTo(bodyController.offset);
+    });
+    _timer = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (mounted) setState(() {});
     });
     super.initState();
   }
@@ -35,6 +43,7 @@ class _WeekViewState extends State<WeekView> {
   void dispose() {
     controller.dispose();
     bodyController.dispose();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -83,12 +92,35 @@ class _WeekViewState extends State<WeekView> {
                         height: DataApp.heightEvent,
                         width: DataApp.widthEvent,
                         padding: const EdgeInsets.all(8),
-                        color: Colors.grey[200],
+                        decoration: BoxDecoration(
+                          border: const Border(
+                            right: BorderSide(
+                              width: 1,
+                              color: Colors.white
+                            )
+                          ),
+                          color: DataApp.mainColor,
+                        ),
                         child: Center(
-                          child: Text(
-                            '${weekdayLabel(date.weekday)}\n${date.day}/${date.month}',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 7.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${TimeUtils.weekdayLabel(date.weekday)}\n${date.day}/${date.month}',
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                                ),
+                                const SizedBox(width: 7.0),
+                                Visibility(
+                                  visible: TimeUtils.isToday(date),
+                                    child: ShowUtils.eventWidget(
+                                      child: const Icon(Icons.today, color: Colors.white, size: 11,)
+                                    )
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       );
@@ -112,12 +144,34 @@ class _WeekViewState extends State<WeekView> {
                             children: days.map((day) {
                               final dayEvents = widget.events.where((e) => isSameDay(e.start, day)).toList();
                               return RepaintBoundary(
-                                child: SizedBox(
-                                  width: DataApp.widthEvent,
-                                  child: DayView(
-                                    date: day,
-                                    events: dayEvents,
-                                  ),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      width: DataApp.widthEvent,
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          right: BorderSide(
+                                            color: DataApp.borderColor,
+                                            width: 1,
+                                          )
+                                        )
+                                      ),
+                                      child: DayView(
+                                        date: day,
+                                        events: dayEvents,
+                                      ),
+                                    ),
+                                    if (TimeUtils.isToday(day))
+                                      Positioned(
+                                        top: TimeUtils.currentTimeTop,
+                                        left: 0,
+                                        right: 0,
+                                        child: Container(
+                                          height: 1.5,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                  ],
                                 ),
                               );
                             }).toList(),
@@ -137,8 +191,16 @@ class _WeekViewState extends State<WeekView> {
 
   Widget _buildTimeColumn() {
     final hours = List.generate(24, (index) => index);
-    return SizedBox(
+    return Container(
       width: DataApp.widthTimeColumn,
+      padding: const EdgeInsets.only(right: 5.0),
+      decoration: BoxDecoration(
+        border: Border(
+          right: BorderSide(
+            color: DataApp.borderColor,
+          )
+        )
+      ),
       child: Column(
         children: hours.map((hour) {
           return SizedBox(
@@ -147,7 +209,7 @@ class _WeekViewState extends State<WeekView> {
               alignment: Alignment.topRight,
               child: Text(
                 '${hour.toString().padLeft(2, '0')}:00',
-                style: const TextStyle(fontSize: 12),
+                style: TextStyle(fontSize: 12, color: DataApp.mainColor, fontWeight: FontWeight.w900),
               ),
             ),
           );

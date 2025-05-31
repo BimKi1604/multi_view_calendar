@@ -3,6 +3,19 @@ import 'package:multi_view_calendar/src/models/calendar_event.dart';
 
 /// class helper for show widget
 class ShowUtils {
+
+  static Widget eventWidget({required Widget child, double? size}) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(width: 1.5, color: Colors.white)
+      ),
+      width: size ?? 21,
+      alignment: Alignment.center,
+      child: child,
+    );
+  }
+
   static void tooltipSingleEvent(BuildContext context, CalendarEvent event, Color color) {
     final text = 'From: ${event.start.hour}:${event.start.minute.toString().padLeft(2, '0')}\n'
         'To: ${event.end.hour}:${event.end.minute.toString().padLeft(2, '0')}';

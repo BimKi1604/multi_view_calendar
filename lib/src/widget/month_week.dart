@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
-import 'package:multi_view_calendar/src/utils/date_utils.dart';
+import 'package:multi_view_calendar/src/utils/time_utils.dart';
+// import 'package:multi_view_calendar/src/utils/time_utils.dart';
 
 class MonthView extends StatelessWidget {
   final DateTime month;
@@ -14,8 +15,8 @@ class MonthView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final firstDayOfMonth = startOfMonth(month);
-    final days = daysInMonthGrid(firstDayOfMonth);
+    final firstDayOfMonth = TimeUtils.startOfMonth(month);
+    final days = TimeUtils.daysInMonthGrid(firstDayOfMonth);
 
     return Column(
       children: [
