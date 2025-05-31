@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/models/position_event.dart';
+import 'package:multi_view_calendar/src/utils/color_utils.dart';
 import 'package:multi_view_calendar/src/utils/show_utils.dart';
 
 class DayViewEventTile extends StatelessWidget {
@@ -17,8 +18,16 @@ class DayViewEventTile extends StatelessWidget {
    return title;
   }
 
+  Color color() {
+    final Color defaultColor = Colors.blueAccent.withOpacity(0.9);
+    if (positionedEvent.events.length == 1) return positionedEvent.events.first.color ?? defaultColor;
+    List<Color> colors = positionedEvent.events.map((e) => e.color ?? defaultColor).toList();
+    return ColorUtils.mixColors(colors);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final Color colorBG = color();
     final event = positionedEvent.events;
     return Positioned(
       top: positionedEvent.top,
@@ -26,13 +35,13 @@ class DayViewEventTile extends StatelessWidget {
       width: positionedEvent.width,
       height: positionedEvent.height,
       child: GestureDetector(
-        onTap: () => _showEventDetails(context, event),
-        onLongPress: () => _showTooltip(context, event),
+        onTap: () => _showEventDetails(context, event, colorBG),
+        onLongPress: () => _showTooltip(context, event, colorBG),
         child: Container(
           margin: const EdgeInsets.all(2),
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: Colors.blueAccent.withOpacity(0.9),
+            color: colorBG,
             borderRadius: BorderRadius.circular(6),
           ),
           child: Text(
@@ -44,20 +53,20 @@ class DayViewEventTile extends StatelessWidget {
     );
   }
 
-  void _showTooltip(BuildContext context, List<CalendarEvent> events) {
+  void _showTooltip(BuildContext context, List<CalendarEvent> events, Color color) {
     if (events.length == 1) {
-      ShowUtils.tooltipSingleEvent(context, events.first);
+      ShowUtils.tooltipSingleEvent(context, events.first, color);
       return;
     }
-    ShowUtils.tooltipMulEvent(context, events);
+    ShowUtils.tooltipMulEvent(context, events, color);
   }
 
-  void _showEventDetails(BuildContext context, List<CalendarEvent> events) {
+  void _showEventDetails(BuildContext context, List<CalendarEvent> events, Color color) {
     if (events.length == 1) {
-      ShowUtils.showSingleEventDetails(context, events.first);
+      ShowUtils.showSingleEventDetails(context, events.first, color);
       return;
     }
-    ShowUtils.showEventsDetails(context, events);
+    ShowUtils.showEventsDetails(context, events, color);
   }
 
 }

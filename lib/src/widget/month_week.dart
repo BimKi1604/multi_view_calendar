@@ -76,7 +76,7 @@ class MonthView extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(horizontal: 2),
                               decoration: BoxDecoration(
                                 color: event.color != null
-                                    ? Color(event.color!).withOpacity(0.8)
+                                    ? event.color!.withOpacity(0.8)
                                     : Colors.blue.withOpacity(0.7),
                                 borderRadius: BorderRadius.circular(4),
                               ),
