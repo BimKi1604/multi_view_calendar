@@ -15,4 +15,21 @@ class CalendarEvent {
     required this.end,
     this.color,
   });
+
+  CalendarEvent copyWith({
+    String? id,
+    String? title,
+    DateTime? start,
+    DateTime? end,
+    Color? color,
+  }) {
+    return CalendarEvent(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      start: start ?? this.start,
+      end: end ?? this.end,
+      color: color ?? this.color,
+    );
+  }
+
 }

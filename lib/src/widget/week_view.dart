@@ -46,8 +46,28 @@ class _WeekViewState extends State<WeekView> {
     super.dispose();
   }
 
-  bool isSameDay(DateTime a, DateTime b) {
-    return a.year == b.year && a.month == b.month && a.day == b.day;
+  List<CalendarEvent> getEventDay(DateTime day) {
+    List<CalendarEvent> events = List.empty(growable: true);
+    List<CalendarEvent> eventsPreDay = List.empty(growable: true);
+
+    for (final event in widget.events) {
+      if (DateUtils.isSameDay(event.start, day)) {
+        events.add(event);
+        // continue;
+      }
+      // if (DateUtils.isSameDay(event.start, day.subtract(const Duration(days: 1)))) {
+      //   eventsPreDay.add(event);
+      //   continue;
+      // }
+    }
+
+    // for (final event in eventsPreDay) {
+    //   if (!TimeUtils.isPassDay(event.start, event.end)) continue;
+    //   events.add(event.copyWith(start: DateTime(event.end.year, event.end.month, event.end.day, 0, 0)));
+    // }
+
+    // events = widget.events.where((e) => DateUtils.isSameDay(e.start, day)).toList(); /// get events
+    return events;
   }
 
   @override
@@ -167,7 +187,7 @@ class _WeekViewState extends State<WeekView> {
                               child: RepaintBoundary(
                                 child: Row(
                                   children: days.map((day) {
-                                    final dayEvents = widget.events.where((e) => isSameDay(e.start, day)).toList();
+                                    final dayEvents = getEventDay(day);
                                     return Container(
                                       width: DataApp.widthEvent,
                                       decoration: BoxDecoration(
