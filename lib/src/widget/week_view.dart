@@ -53,18 +53,18 @@ class _WeekViewState extends State<WeekView> {
     for (final event in widget.events) {
       if (DateUtils.isSameDay(event.start, day)) {
         events.add(event);
-        // continue;
+        continue;
       }
-      // if (DateUtils.isSameDay(event.start, day.subtract(const Duration(days: 1)))) {
-      //   eventsPreDay.add(event);
-      //   continue;
-      // }
+      if (DateUtils.isSameDay(event.start, day.subtract(const Duration(days: 1)))) {
+        eventsPreDay.add(event);
+        continue;
+      }
     }
 
-    // for (final event in eventsPreDay) {
-    //   if (!TimeUtils.isPassDay(event.start, event.end)) continue;
-    //   events.add(event.copyWith(start: DateTime(event.end.year, event.end.month, event.end.day, 0, 0)));
-    // }
+    for (final event in eventsPreDay) {
+      if (!TimeUtils.isPassDay(event.start, event.end)) continue;
+      events.add(event.copyWith(start: DateTime(event.end.year, event.end.month, event.end.day, 0, 0)));
+    }
 
     // events = widget.events.where((e) => DateUtils.isSameDay(e.start, day)).toList(); /// get events
     return events;

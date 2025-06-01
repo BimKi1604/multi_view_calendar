@@ -68,25 +68,25 @@ class DayView extends StatelessWidget {
           width: DataApp.widthEvent,
         ));
         /// case pass day
-        if (event.start.day < event.end.day) {
-          final DateTime end = event.end;
-          final int overMinutes = end.difference(DateTime(end.year,end.month, end.day, 0, 0)).inMinutes.abs();
-          final int minutes = overMinutes % 60;
-          final int hours = overMinutes ~/ 60;
-          const int startMinutes = 0;
-          final int endMinutes = hours * 60 + minutes;
-          const double top = 0;
-          final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
-          /// Thêm case nếu add mới vào trùng lịch đã có thì phải group lại
-          /// Case pass qua ngày thì thời gian over ngày mới đã hiển thị nhưng vẫn đang nằm ở ngày cũ
-          positioned.add(PositionedEvent(
-            events: [event],
-            top: top,
-            height: height,
-            left: 0,
-            width: DataApp.widthEvent,
-          ));
-        }
+        // if (event.start.day < event.end.day) {
+        //   final DateTime end = event.end;
+        //   final int overMinutes = end.difference(DateTime(end.year,end.month, end.day, 0, 0)).inMinutes.abs();
+        //   final int minutes = overMinutes % 60;
+        //   final int hours = overMinutes ~/ 60;
+        //   const int startMinutes = 0;
+        //   final int endMinutes = hours * 60 + minutes;
+        //   const double top = 0;
+        //   final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
+        //   /// Thêm case nếu add mới vào trùng lịch đã có thì phải group lại
+        //   /// Case pass qua ngày thì thời gian over ngày mới đã hiển thị nhưng vẫn đang nằm ở ngày cũ
+        //   positioned.add(PositionedEvent(
+        //     events: [event],
+        //     top: top,
+        //     height: height,
+        //     left: 0,
+        //     width: DataApp.widthEvent,
+        //   ));
+        // }
       }
       return positioned;
     }
@@ -110,23 +110,23 @@ class DayView extends StatelessWidget {
           width: DataApp.widthEvent,
         ));
         /// case pass day
-        if (event.start.day < event.end.day) {
-          final DateTime end = event.end;
-          final int overMinutes = end.difference(DateTime(end.year,end.month, end.day, 0, 0)).inMinutes.abs();
-          final int minutes = overMinutes % 60;
-          final int hours = overMinutes ~/ 60;
-          const int startMinutes = 0;
-          final int endMinutes = hours * 60 + minutes;
-          const double top = 0;
-          final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
-          positioned.add(PositionedEvent(
-            events: [event],
-            top: top,
-            height: height,
-            left: 0,
-            width: DataApp.widthEvent,
-          ));
-        }
+        // if (event.start.day < event.end.day) {
+        //   final DateTime end = event.end;
+        //   final int overMinutes = end.difference(DateTime(end.year,end.month, end.day, 0, 0)).inMinutes.abs();
+        //   final int minutes = overMinutes % 60;
+        //   final int hours = overMinutes ~/ 60;
+        //   const int startMinutes = 0;
+        //   final int endMinutes = hours * 60 + minutes;
+        //   const double top = 0;
+        //   final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
+        //   positioned.add(PositionedEvent(
+        //     events: [event],
+        //     top: top,
+        //     height: height,
+        //     left: 0,
+        //     width: DataApp.widthEvent,
+        //   ));
+        // }
       }
     }
     return positioned;
