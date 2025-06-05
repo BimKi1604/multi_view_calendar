@@ -32,4 +32,24 @@ class CalendarEvent {
     );
   }
 
+  static CalendarEvent defaultEvent() {
+    return CalendarEvent(
+      id: '-1',
+      title: '',
+      start: DateTime.now(),
+      end: DateTime.now().add(const Duration(hours: 1)),
+      color: Colors.blue,
+    );
+  }
+
+  static CalendarEvent emptyEvent() {
+    return CalendarEvent(
+      id: '',
+      title: '',
+      start: DateTime.now(),
+      end: DateTime.now(),
+      color: Colors.transparent,
+    );
+  }
+
 }

@@ -66,7 +66,6 @@ class _WeekViewState extends State<WeekView> {
       events.add(event.copyWith(start: DateTime(event.end.year, event.end.month, event.end.day, 0, 0)));
     }
 
-    // events = widget.events.where((e) => DateUtils.isSameDay(e.start, day)).toList(); /// get events
     return events;
   }
 

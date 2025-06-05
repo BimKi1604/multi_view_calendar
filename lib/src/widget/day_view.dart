@@ -47,110 +47,51 @@ class DayView extends StatelessWidget {
 
   List<PositionedEvent> _calculateEventPositions(List<CalendarEvent> events) {
     final List<PositionedEvent> positioned = [];
-    final double minuteHeight = DataApp.heightEvent / 60; /// height pixel each minute
-    final List<List<CalendarEvent>> groups = _groupOverlappingEvents(events);
+    final double minuteHeight = DataApp.heightEvent / 60;
+    final groups = _groupOverlappingEvents(events); /// group events by overlap
 
-    if (groups.isEmpty) return positioned;
-    if (groups.length == 1) {
-      final group = groups.first;
-      for (int i = 0; i < group.length; i++) {
-        final event = group[i];
-        final int startMinutes = event.start.hour * 60 + event.start.minute;
-        final int endMinutes = (TimeUtils.isPassDay(event.start, event.end) ? (24 + event.end.difference(event.start).inHours.abs()) : event.end.hour) * 60 + event.end.minute;
-        final double top = startMinutes * minuteHeight;
-        final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
-
-        positioned.add(PositionedEvent(
-          events: [event],
-          top: top,
-          height: height,
-          left: 0,
-          width: DataApp.widthEvent,
-        ));
-        /// case pass day
-        // if (event.start.day < event.end.day) {
-        //   final DateTime end = event.end;
-        //   final int overMinutes = end.difference(DateTime(end.year,end.month, end.day, 0, 0)).inMinutes.abs();
-        //   final int minutes = overMinutes % 60;
-        //   final int hours = overMinutes ~/ 60;
-        //   const int startMinutes = 0;
-        //   final int endMinutes = hours * 60 + minutes;
-        //   const double top = 0;
-        //   final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
-        //   /// Thêm case nếu add mới vào trùng lịch đã có thì phải group lại
-        //   /// Case pass qua ngày thì thời gian over ngày mới đã hiển thị nhưng vẫn đang nằm ở ngày cũ
-        //   positioned.add(PositionedEvent(
-        //     events: [event],
-        //     top: top,
-        //     height: height,
-        //     left: 0,
-        //     width: DataApp.widthEvent,
-        //   ));
-        // }
-      }
-      return positioned;
-    }
-    List<CalendarEvent> eventsList = List.empty(growable: true);
-
-    for (final group in groups) {
-      for (int i = 0; i < group.length; i++) {
-        final event = group[i];
-        final int startMinutes = event.start.hour * 60 + event.start.minute;
-        final int endMinutes = (TimeUtils.isPassDay(event.start, event.end) ? (24 + event.end.difference(event.start).inHours.abs()) : event.end.hour) * 60 + event.end.minute;
-        final double top = startMinutes * minuteHeight;
-        final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
-
-        eventsList.add(group[i]);
-
-        positioned.add(PositionedEvent(
-          events: eventsList,
-          top: top,
-          height: height,
-          left: 0,
-          width: DataApp.widthEvent,
-        ));
-        /// case pass day
-        // if (event.start.day < event.end.day) {
-        //   final DateTime end = event.end;
-        //   final int overMinutes = end.difference(DateTime(end.year,end.month, end.day, 0, 0)).inMinutes.abs();
-        //   final int minutes = overMinutes % 60;
-        //   final int hours = overMinutes ~/ 60;
-        //   const int startMinutes = 0;
-        //   final int endMinutes = hours * 60 + minutes;
-        //   const double top = 0;
-        //   final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
-        //   positioned.add(PositionedEvent(
-        //     events: [event],
-        //     top: top,
-        //     height: height,
-        //     left: 0,
-        //     width: DataApp.widthEvent,
-        //   ));
-        // }
-      }
+    for (final group in groups) { /// group events by overlap
+      if (group.isEmpty) continue; /// skip empty groups
+      final eventStartEarliest = group.reduce((a, b) => a.start.isBefore(b.start) ? a : b); /// find earliest start
+      final eventEndLatest = group.reduce((a, b) => a.end.isAfter(b.end) ? a : b); /// find latest end
+      final int startMinutes = eventStartEarliest.start.hour * 60 + eventStartEarliest.start.minute;
+      final int endMinutes = (TimeUtils.isPassDay(eventStartEarliest.start, eventEndLatest.end)
+          ? (24 + eventEndLatest.end.difference(eventStartEarliest.start).inHours.abs())
+          : eventEndLatest.end.hour) * 60 + eventEndLatest.end.minute;
+      final double top = startMinutes * minuteHeight;
+      final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
+      positioned.add(PositionedEvent(
+        events: group,
+        top: top,
+        height: height,
+        left: 0,
+        width: DataApp.widthEvent,
+      ));
     }
     return positioned;
   }
 
   List<List<CalendarEvent>> _groupOverlappingEvents(List<CalendarEvent> events) {
     final sorted = List<CalendarEvent>.from(events)..sort((a, b) => a.start.compareTo(b.start));
-    final List<List<CalendarEvent>> groups = [];
+    final List<List<CalendarEvent>> group = [];
 
     for (final event in sorted) {
       bool added = false;
-      for (final group in groups) {
-        if (!group.any((e) => _eventsOverlap(e, event))) {
-          group.add(event);
+      int index = -2;
+      for (final groupOverlap in group) {
+        index = groupOverlap.indexWhere((e) => _eventsOverlap(e, event));
+        if (index != -1) {
+          groupOverlap.add(event);
           added = true;
           break;
         }
       }
       if (!added) {
-        groups.add([event]);
+        group.add([event]);
       }
     }
 
-    return groups;
+    return group;
   }
 
   bool _eventsOverlap(CalendarEvent a, CalendarEvent b) { /// check event overlap

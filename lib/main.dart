@@ -41,7 +41,7 @@ class CalendarDemoPage extends StatelessWidget {
         title: 'Calling with team',
         color: Colors.amber,
         start: DateTime(now.year, now.month, now.day + 2, now.hour, 15),
-        end: DateTime(now.year, now.month, now.day + 2, now.hour + 2, 15),
+        end: DateTime(now.year, now.month, now.day + 2, now.hour + 2, 45),
       ),
       CalendarEvent(
         id: "2",
