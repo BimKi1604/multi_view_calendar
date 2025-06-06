@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 
+import '../models/calendar_event.dart';
+
 class TimeUtils {
   static DateTime startOfMonth(DateTime date) {
     return DateTime(date.year, date.month, 1);
@@ -39,6 +41,31 @@ class TimeUtils {
     final minutes = now.hour * 60 + now.minute;
     final minutesHeight = DataApp.heightEvent / 60; /// pixel each minute
     return minutes * minutesHeight;
+  }
+
+  static List<CalendarEvent> getEventDay({ required DateTime day, required List<CalendarEvent> totalEvents }) {
+    List<CalendarEvent> events = List.empty(growable: true);
+    List<CalendarEvent> eventsPreDay = List.empty(growable: true);
+
+    /// Get events for the specific day and the previous day
+    for (final event in totalEvents) {
+      if (DateUtils.isSameDay(event.start, day)) {
+        events.add(event);
+        continue;
+      }
+      if (DateUtils.isSameDay(event.start, day.subtract(const Duration(days: 1)))) {
+        eventsPreDay.add(event);
+        continue;
+      }
+    }
+
+    /// Filter events that pass the day
+    for (final event in eventsPreDay) {
+      if (!TimeUtils.isPassDay(event.start, event.end)) continue;
+      events.add(event.copyWith(start: DateTime(event.end.year, event.end.month, event.end.day, 0, 0)));
+    }
+
+    return events;
   }
 }
 

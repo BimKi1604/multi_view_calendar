@@ -18,6 +18,35 @@ class ShowUtils {
     );
   }
 
+  static Widget buildTimeColumn() {
+    final hours = List.generate(24, (index) => index);
+    return Container(
+      width: DataApp.widthTimeColumn,
+      padding: const EdgeInsets.only(right: 10.0),
+      decoration: BoxDecoration(
+          border: Border(
+              right: BorderSide(
+                color: DataApp.borderColor,
+              )
+          )
+      ),
+      child: Column(
+        children: hours.map((hour) {
+          return SizedBox(
+            height: DataApp.heightEvent,
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Text(
+                '${hour.toString().padLeft(2, '0')}:00',
+                style: TextStyle(fontSize: 12, color: DataApp.mainColor, fontWeight: FontWeight.w900),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   static void tooltipSingleEvent(BuildContext context, CalendarEvent event, Color color) {
     final text = 'From: ${event.start.hour}:${event.start.minute.toString().padLeft(2, '0')}\n'
         'To: ${event.end.hour}:${event.end.minute.toString().padLeft(2, '0')}';

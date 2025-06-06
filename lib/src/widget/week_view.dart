@@ -46,29 +46,6 @@ class _WeekViewState extends State<WeekView> {
     super.dispose();
   }
 
-  List<CalendarEvent> getEventDay(DateTime day) {
-    List<CalendarEvent> events = List.empty(growable: true);
-    List<CalendarEvent> eventsPreDay = List.empty(growable: true);
-
-    for (final event in widget.events) {
-      if (DateUtils.isSameDay(event.start, day)) {
-        events.add(event);
-        continue;
-      }
-      if (DateUtils.isSameDay(event.start, day.subtract(const Duration(days: 1)))) {
-        eventsPreDay.add(event);
-        continue;
-      }
-    }
-
-    for (final event in eventsPreDay) {
-      if (!TimeUtils.isPassDay(event.start, event.end)) continue;
-      events.add(event.copyWith(start: DateTime(event.end.year, event.end.month, event.end.day, 0, 0)));
-    }
-
-    return events;
-  }
-
   @override
   Widget build(BuildContext context) {
     final days = List.generate(
@@ -176,7 +153,7 @@ class _WeekViewState extends State<WeekView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Left Time Column
-                          _buildTimeColumn(),
+                          ShowUtils.buildTimeColumn(),
 
                           // Scrollable horizontal day columns
                           Expanded(
@@ -186,7 +163,6 @@ class _WeekViewState extends State<WeekView> {
                               child: RepaintBoundary(
                                 child: Row(
                                   children: days.map((day) {
-                                    final dayEvents = getEventDay(day);
                                     return Container(
                                       width: DataApp.widthEvent,
                                       decoration: BoxDecoration(
@@ -199,7 +175,8 @@ class _WeekViewState extends State<WeekView> {
                                       ),
                                       child: DayView(
                                         date: day,
-                                        events: dayEvents,
+                                        onlyDay: false,
+                                        events: widget.events,
                                       ),
                                     );
                                   }).toList(),
@@ -217,35 +194,6 @@ class _WeekViewState extends State<WeekView> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildTimeColumn() {
-    final hours = List.generate(24, (index) => index);
-    return Container(
-      width: DataApp.widthTimeColumn,
-      padding: const EdgeInsets.only(right: 10.0),
-      decoration: BoxDecoration(
-        border: Border(
-          right: BorderSide(
-            color: DataApp.borderColor,
-          )
-        )
-      ),
-      child: Column(
-        children: hours.map((hour) {
-          return SizedBox(
-            height: DataApp.heightEvent,
-            child: Align(
-              alignment: Alignment.topRight,
-              child: Text(
-                '${hour.toString().padLeft(2, '0')}:00',
-                style: TextStyle(fontSize: 12, color: DataApp.mainColor, fontWeight: FontWeight.w900),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
     );
   }
 

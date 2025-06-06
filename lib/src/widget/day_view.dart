@@ -1,47 +1,133 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/position_event.dart';
+import 'package:multi_view_calendar/src/utils/show_utils.dart';
 import 'package:multi_view_calendar/src/utils/time_utils.dart';
 import 'package:multi_view_calendar/src/widget/day_view_event_tile.dart';
 
-class DayView extends StatelessWidget {
+class DayView extends StatefulWidget {
   final DateTime date;
   final List<CalendarEvent> events;
   final bool showTimeLabels;
+  final bool onlyDay;
 
   const DayView({
     super.key,
     required this.date,
     required this.events,
     this.showTimeLabels = true,
+    this.onlyDay = true,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final List<PositionedEvent> positionedEvents = _calculateEventPositions(events);
+  State<DayView> createState() => _DayViewState();
+}
 
-    return Stack(
-      children: [
-        if (showTimeLabels) _buildTimeLines(),
-        ...positionedEvents.map((e) => DayViewEventTile(positionedEvent: e)),
-      ],
+class _DayViewState extends State<DayView> {
+  late final Timer _timer;
+
+  @override
+  void initState() {
+    if (widget.onlyDay) {
+      _timer = Timer.periodic(const Duration(minutes: 1), (_) {
+        if (mounted) setState(() {});
+      });
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    if (widget.onlyDay) {
+      _timer.cancel();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final List<CalendarEvent> eventsFilter = TimeUtils.getEventDay(
+      day: widget.date,
+      totalEvents: widget.events,
+    );
+    final List<PositionedEvent> positionedEvents = _calculateEventPositions(eventsFilter);
+    final Size screenSize = MediaQuery.of(context).size;
+
+    return SingleChildScrollView(
+      child: Stack(
+        children: [
+          Visibility(
+            visible: widget.onlyDay,
+            child: Positioned(
+              top: TimeUtils.currentTimeTop - 3,
+              left: DataApp.widthTimeColumn - 11,
+              right: 0,
+              child: Row(
+                children: [
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: DataApp.iconColor,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 1.5,
+                      color: DataApp.iconColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Row(
+            children: [
+              /// Left Time Column
+              Visibility(
+                  visible: widget.onlyDay,
+                  child: ShowUtils.buildTimeColumn()),
+
+              /// Scrollable horizontal day columns
+              Expanded(
+                child: SizedBox(
+                  width: screenSize.width,
+                  child: Stack(
+                    children: [
+                      if (widget.showTimeLabels) _buildTimeLines(),
+                      ...positionedEvents.map((e) => DayViewEventTile(positionedEvent: e)),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildTimeLines() {
-    return Column(
-      children: List.generate(24, (index) {
-        return Container(
-          height: DataApp.heightEvent,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(color: Colors.grey.shade300, width: 0.5),
+    return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
+      child: Column(
+        children: List.generate(24, (index) {
+          return Container(
+            height: DataApp.heightEvent,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border(
+                top: BorderSide(color: Colors.grey.shade300, width: 0.5),
+              ),
             ),
-          ),
-        );
-      }),
+          );
+        }),
+      ),
     );
   }
 
