@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
@@ -92,7 +90,7 @@ class _DayViewState extends State<DayView> {
               Visibility(
                   visible: widget.onlyDay,
                   child: ShowUtils.buildTimeColumn()),
-
+  
               /// Scrollable horizontal day columns
               Expanded(
                 child: SizedBox(

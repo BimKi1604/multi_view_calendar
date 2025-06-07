@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
-import 'package:multi_view_calendar/src/widget/month_week.dart';
+import 'package:multi_view_calendar/src/widget/month/month_week.dart';
 
 class YearView extends StatelessWidget {
   final DateTime year;

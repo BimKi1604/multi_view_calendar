@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multi_view_calendar/src/data/data.dart';
 
 /// The class helper for click event
 class ClickUtils extends StatelessWidget {
@@ -15,7 +16,7 @@ class ClickUtils extends StatelessWidget {
     required this.child,
     this.enable = true,
     this.color,
-    this.padding = const EdgeInsets.all(4),
+    this.padding = const EdgeInsets.all(0),
     this.borderRadius = const BorderRadius.all(Radius.circular(8)),
   });
 
@@ -26,7 +27,7 @@ class ClickUtils extends StatelessWidget {
       borderRadius: borderRadius,
       child: InkWell(
         onTap: enable ? onTap : null,
-        splashColor: color?.withAlpha(50),
+        splashColor: color != null ? color?.withAlpha(50) : DataApp.splashColor,
         borderRadius: borderRadius,
         child: Padding(
           padding: padding,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 
 import '../models/calendar_event.dart';
+import 'package:intl/intl.dart';
 
 class TimeUtils {
   static DateTime startOfMonth(DateTime date) {
@@ -66,6 +67,17 @@ class TimeUtils {
     }
 
     return events;
+  }
+
+  /// Convert DateTime to a short weekday label (e.g., "Mo", "Tu")
+  static String dateTimeToShortWeekday(DateTime date) {
+    const labels = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+    return labels[(date.weekday - 1) % 7];
+  }
+
+  /// Format date to 'dd/MM/yyyy'
+  static String formatMonthYear(DateTime date, {String format = 'MMMM, yyyy'}) {
+    return DateFormat(format).format(date);
   }
 }
 

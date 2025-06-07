@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/models/position_event.dart';
 import 'package:multi_view_calendar/src/utils/color_utils.dart';
@@ -19,7 +20,7 @@ class DayViewEventTile extends StatelessWidget {
   }
 
   Color color() {
-    final Color defaultColor = Colors.blueAccent.withOpacity(0.9);
+    final Color defaultColor = DataApp.mainColor.withOpacity(0.9);
     if (positionedEvent.events.length == 1) return positionedEvent.events.first.color ?? defaultColor;
     List<Color> colors = positionedEvent.events.map((e) => e.color ?? defaultColor).toList();
     return ColorUtils.mixColors(colors);

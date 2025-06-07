@@ -1,9 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/data/calendar_view_type.dart';
-import 'calendar_header.dart';
+import 'elements/calendar_header.dart';
 import 'day_view.dart';
-import 'month_week.dart';
+import 'month/month_week.dart';
 import 'week_view.dart';
 import 'year_view.dart';
 
@@ -111,7 +112,8 @@ class _MultiViewCalendarState extends State<MultiViewCalendar> {
           onViewChange: _changeView,
         ),
         const Divider(height: 1),
-        Expanded(child: view),
+        const SizedBox(height: 20.0,),
+        Flexible(child: view),
       ],
     );
   }

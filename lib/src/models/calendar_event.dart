@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../data/data.dart';
+
 /// Model calendar events
 class CalendarEvent {
   final String id;
@@ -38,7 +40,7 @@ class CalendarEvent {
       title: '',
       start: DateTime.now(),
       end: DateTime.now().add(const Duration(hours: 1)),
-      color: Colors.blue,
+      color: DataApp.mainColor,
     );
   }
 
