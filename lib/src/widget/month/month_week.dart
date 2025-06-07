@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
+import 'package:multi_view_calendar/src/utils/show_utils.dart';
 import 'package:multi_view_calendar/src/utils/time_utils.dart';
 import 'package:multi_view_calendar/src/widget/month/month_body.dart';
 import 'package:multi_view_calendar/src/widget/month/month_event_tile.dart';
@@ -24,7 +25,14 @@ class MonthView extends StatefulWidget {
 
 class _MonthViewState extends State<MonthView> {
 
+  DateTime initDate = DateTime.now();
   DateTime? selectedDate;
+
+  @override
+  void initState() {
+    initDate = widget.month;
+    super.initState();
+  }
 
   void _onDaySelected(DateTime day) {
     if (selectedDate == day) return;
@@ -63,7 +71,7 @@ class _MonthViewState extends State<MonthView> {
   Color? _getEventColor(DateTime day) {
     if (day == selectedDate) return Colors.white;
 
-    final isOutsideMonth = day.month != widget.month.month;
+    final isOutsideMonth = day.month != initDate.month;
     if (isOutsideMonth) {
       return Colors.grey[350];
     }
@@ -79,9 +87,22 @@ class _MonthViewState extends State<MonthView> {
     }).toList();
   }
 
+  void _onOpenSelectMonth(BuildContext context) async {
+    DateTime? month = await ShowUtils.showPrettyMonthPicker(
+      context: context,
+      initialDate: initDate,
+    );
+    if (month == null) return;
+    if (!mounted) return;
+    setState(() {
+      initDate = month;
+      selectedDate = null; // Reset selected date when month changes
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final firstDayOfMonth = TimeUtils.startOfMonth(widget.month);
+    final firstDayOfMonth = TimeUtils.startOfMonth(initDate);
     final days = TimeUtils.daysInMonthGrid(firstDayOfMonth);
     final events = _getEventsForDay();
 
@@ -108,7 +129,10 @@ class _MonthViewState extends State<MonthView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 MonthHeader(
-                  month: widget.month,
+                  month: initDate,
+                  onMonthSelected: (date) {
+                    _onOpenSelectMonth(context);
+                  },
                 ),
                 const WeekdayHeader(),
                 const SizedBox(height: 5.0,),

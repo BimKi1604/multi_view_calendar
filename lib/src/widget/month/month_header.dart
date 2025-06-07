@@ -3,16 +3,15 @@ import 'package:multi_view_calendar/src/utils/click_utils.dart';
 import 'package:multi_view_calendar/src/utils/time_utils.dart';
 
 class MonthHeader extends StatelessWidget {
-  const MonthHeader({super.key, required this.month});
+  const MonthHeader({super.key, required this.month, required this.onMonthSelected});
 
   final DateTime month;
+  final Function(DateTime) onMonthSelected;
 
   @override
   Widget build(BuildContext context) {
     return ClickUtils(
-      onTap: (){
-
-      },
+      onTap: () => onMonthSelected(month),
       color: Colors.grey[400],
       child: Padding(
         padding: const EdgeInsets.all(12),

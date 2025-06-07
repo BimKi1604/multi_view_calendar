@@ -79,5 +79,13 @@ class TimeUtils {
   static String formatMonthYear(DateTime date, {String format = 'MMMM, yyyy'}) {
     return DateFormat(format).format(date);
   }
+
+  static String monthLabel(int month) {
+    const monthNames = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ];
+    return monthNames[month - 1];
+  }
 }
 

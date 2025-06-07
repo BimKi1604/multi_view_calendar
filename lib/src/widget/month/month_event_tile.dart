@@ -91,18 +91,17 @@ class MonthEventTile extends StatelessWidget {
                       ),
                     ),
                     // Time
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                    Row(
                       children: [
                         Text(
                           time.hourOfPeriod.toString().padLeft(2, '0'),
                           style: const TextStyle(
-                            fontSize: 32,
+                            fontSize: 34,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        const SizedBox(width: 4),
+                        Column(
                           children: [
                             Text(
                               ':${time.minute.toString().padLeft(2, '0')}',
@@ -111,7 +110,6 @@ class MonthEventTile extends StatelessWidget {
                                 color: Colors.grey,
                               ),
                             ),
-                            const SizedBox(width: 4),
                             Text(
                               time.period == DayPeriod.am ? 'AM' : 'PM',
                               style: const TextStyle(
