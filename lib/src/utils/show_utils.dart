@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
@@ -216,6 +218,30 @@ class ShowUtils {
               ),
             );
           },
+        );
+      },
+    );
+  }
+
+  static void showFullScreenDialog(BuildContext context, {required Widget child}) {
+    showGeneralDialog(
+      context: context,
+      barrierLabel: "FullScreenDialog",
+      barrierDismissible: true,
+      transitionDuration: const Duration(milliseconds: 400),
+      pageBuilder: (_, __, ___) {
+        return child;
+      },
+      transitionBuilder: (_, anim, __, child) {
+        return SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(0, 1),
+            end: const Offset(0, 0),
+          ).animate(CurvedAnimation(
+            parent: anim,
+            curve: Curves.easeOutCubic,
+          )),
+          child: child,
         );
       },
     );

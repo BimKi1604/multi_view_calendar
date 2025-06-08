@@ -9,6 +9,8 @@ class CalendarEvent {
   final DateTime start;
   final DateTime end;
   final Color? color;
+  final String? description;
+  final String? location;
 
   CalendarEvent({
     required this.id,
@@ -16,6 +18,8 @@ class CalendarEvent {
     required this.start,
     required this.end,
     this.color,
+    this.description,
+    this.location,
   });
 
   CalendarEvent copyWith({
@@ -24,6 +28,8 @@ class CalendarEvent {
     DateTime? start,
     DateTime? end,
     Color? color,
+    String? description,
+    String? location,
   }) {
     return CalendarEvent(
       id: id ?? this.id,
@@ -31,6 +37,8 @@ class CalendarEvent {
       start: start ?? this.start,
       end: end ?? this.end,
       color: color ?? this.color,
+      description: description ?? this.description,
+      location: location ?? this.location,
     );
   }
 
@@ -41,6 +49,8 @@ class CalendarEvent {
       start: DateTime.now(),
       end: DateTime.now().add(const Duration(hours: 1)),
       color: DataApp.mainColor,
+      description: '',
+      location: '',
     );
   }
 
@@ -51,6 +61,8 @@ class CalendarEvent {
       start: DateTime.now(),
       end: DateTime.now(),
       color: Colors.transparent,
+      description: '',
+      location: '',
     );
   }
 

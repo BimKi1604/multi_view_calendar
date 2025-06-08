@@ -9,6 +9,8 @@ import 'package:multi_view_calendar/src/widget/month/month_header.dart';
 import 'package:multi_view_calendar/src/widget/elements/weekday_header.dart';
 import 'package:multi_view_calendar/src/widget/month/month_title_task.dart';
 
+import 'month_action_event.dart';
+
 class MonthView extends StatefulWidget {
   final DateTime month;
   final List<CalendarEvent> events;
@@ -100,6 +102,10 @@ class _MonthViewState extends State<MonthView> {
     });
   }
 
+  void _onAddEvent() {
+    ShowUtils.showFullScreenDialog(context, child: MonthActionEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     final firstDayOfMonth = TimeUtils.startOfMonth(initDate);
@@ -147,8 +153,8 @@ class _MonthViewState extends State<MonthView> {
             ),
           ),
           MonthTitleTask(
-            onAdd: () {
-              // Handle add task action
+            onAdd: () async {
+              _onAddEvent();
             },
           ),
           ListView.builder(

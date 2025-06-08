@@ -6,3 +6,11 @@ enum CalendarViewType {
   month,
   year
 }
+
+enum MeetingPlatform {
+  zoom,
+  googleMeet,
+  skype,
+  teams,
+  other
+}

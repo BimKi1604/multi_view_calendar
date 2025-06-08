@@ -1,4 +1,6 @@
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 
@@ -86,6 +88,38 @@ class TimeUtils {
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
     ];
     return monthNames[month - 1];
+  }
+
+  static Future<DateTime?> showDateTimePicker(BuildContext context, DateTime? initial) async {
+    final now = DateTime.now();
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initial ?? now,
+      firstDate: DateTime(now.year - 1),
+      lastDate: DateTime(now.year + 2),
+    );
+
+    if (pickedDate == null) return null;
+
+    final pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(initial ?? now),
+    );
+
+    if (pickedTime == null) return null;
+
+    return DateTime(
+      pickedDate.year,
+      pickedDate.month,
+      pickedDate.day,
+      pickedTime.hour,
+      pickedTime.minute,
+    );
+  }
+
+  static String generateSimpleId() {
+    final rand = Random();
+    return '${DateTime.now().millisecondsSinceEpoch}_${rand.nextInt(10000)}';
   }
 }
 
