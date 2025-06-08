@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:multi_view_calendar/src/utils/click_utils.dart';
 import 'package:multi_view_calendar/src/utils/time_utils.dart';
 
 class MonthEventTile extends StatelessWidget {
@@ -8,6 +9,7 @@ class MonthEventTile extends StatelessWidget {
   final TimeOfDay time;
   final bool isFirst;
   final bool isLast;
+  final Function() callback;
 
   const MonthEventTile({
     super.key,
@@ -17,6 +19,7 @@ class MonthEventTile extends StatelessWidget {
     required this.time,
     this.isFirst = false,
     this.isLast = false,
+    required this.callback,
   });
 
   @override
@@ -29,7 +32,7 @@ class MonthEventTile extends StatelessWidget {
             Expanded(
               child: Container(
                 margin: const EdgeInsets.symmetric(vertical: 8),
-                padding: const EdgeInsets.all(16),
+
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -41,88 +44,96 @@ class MonthEventTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Row(
-                  children: [
-                    // Text content
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            title,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              const Icon(Icons.access_time, size: 14, color: Colors.grey),
-                              const SizedBox(width: 4),
-                              Flexible(
-                                child: Text(
-                                  TimeUtils.formatMonthYear(start ,format: "dd/MM/yyyy HH:mm"),
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              const Icon(Icons.flag, size: 14, color: Colors.grey),
-                              const SizedBox(width: 4),
-                              Flexible(
-                                child: Text(
-                                  TimeUtils.formatMonthYear(end ,format: "dd/MM/yyyy HH:mm"),
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Time
-                    Row(
+                child: ClickUtils(
+                  onTap: (){
+                    callback();
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
                       children: [
-                        Text(
-                          time.hourOfPeriod.toString().padLeft(2, '0'),
-                          style: const TextStyle(
-                            fontSize: 34,
-                            fontWeight: FontWeight.bold,
+                        // Text content
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                title,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  const Icon(Icons.access_time, size: 14, color: Colors.grey),
+                                  const SizedBox(width: 4),
+                                  Flexible(
+                                    child: Text(
+                                      TimeUtils.formatMonthYear(start ,format: "dd/MM/yyyy HH:mm"),
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  const Icon(Icons.flag, size: 14, color: Colors.grey),
+                                  const SizedBox(width: 4),
+                                  Flexible(
+                                    child: Text(
+                                      TimeUtils.formatMonthYear(end ,format: "dd/MM/yyyy HH:mm"),
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(width: 4),
-                        Column(
+                        // Time
+                        Row(
                           children: [
                             Text(
-                              ':${time.minute.toString().padLeft(2, '0')}',
+                              time.hourOfPeriod.toString().padLeft(2, '0'),
                               style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
-                              ),
-                            ),
-                            Text(
-                              time.period == DayPeriod.am ? 'AM' : 'PM',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey,
+                                fontSize: 34,
                                 fontWeight: FontWeight.bold,
                               ),
+                            ),
+                            const SizedBox(width: 4),
+                            Column(
+                              children: [
+                                Text(
+                                  ':${time.minute.toString().padLeft(2, '0')}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  time.period == DayPeriod.am ? 'AM' : 'PM',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),

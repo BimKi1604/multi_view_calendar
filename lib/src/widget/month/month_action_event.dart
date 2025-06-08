@@ -1,16 +1,19 @@
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:multi_view_calendar/src/component/button_default.dart';
 import 'package:multi_view_calendar/src/data/calendar_view_type.dart';
+import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/utils/click_utils.dart';
 import 'package:multi_view_calendar/src/utils/string_utils.dart';
 import 'package:multi_view_calendar/src/utils/time_utils.dart';
 
 class MonthActionEvent extends StatefulWidget {
-  const MonthActionEvent({super.key});
+  const MonthActionEvent({super.key, this.event});
+
+  final CalendarEvent? event;
 
   @override
   State<MonthActionEvent> createState() => _MonthActionEventState();
@@ -21,6 +24,8 @@ class _MonthActionEventState extends State<MonthActionEvent> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final FocusNode locationFocusNode = FocusNode();
+  String id = "";
+  bool isUpdate = false;
 
   String alphabet = "";
   DateTime? startDate;
@@ -40,7 +45,22 @@ class _MonthActionEventState extends State<MonthActionEvent> {
 
   @override
   void initState() {
-    randomColor = colors[rand.nextInt(colors.length)];
+    if (widget.event != null) {
+      isUpdate = true;
+      titleController.text = widget.event!.title;
+      descriptionController.text = widget.event!.description ?? '';
+      locationController.text = widget.event!.location ?? '';
+      startDate = widget.event!.start;
+      endDate = widget.event!.end;
+      alphabet = widget.event!.title.isNotEmpty ? widget.event!.title[0].toUpperCase() : "";
+      randomColor = widget.event!.color;
+      id = widget.event!.id;
+    } else {
+      startDate = DateTime.now();
+      endDate = DateTime.now().add(const Duration(hours: 1));
+      randomColor = colors[rand.nextInt(colors.length)];
+      id = TimeUtils.generateSimpleId();
+    }
     locationFocusNode.addListener(() {
       if (!locationFocusNode.hasFocus) {
         if (mounted) setState(() {});
@@ -84,7 +104,7 @@ class _MonthActionEventState extends State<MonthActionEvent> {
 
     // Create new event
     CalendarEvent newEvent = CalendarEvent(
-      id: TimeUtils.generateSimpleId(),
+      id: id,
       title: titleController.text,
       color: randomColor!,
       start: startDate!,
@@ -115,7 +135,35 @@ class _MonthActionEventState extends State<MonthActionEvent> {
         rootImg += "teams.png";
         return Image.asset(rootImg);
       default:
-        return const Icon(Icons.location_on, color: Colors.grey);
+        return Icon(Icons.location_on, color: DataApp.mainColor);
+    }
+  }
+
+  void onPickDateTime({bool isStart = true}) async {
+    if (isStart) {
+      final picked = await TimeUtils.showDateTimePicker(context, startDate);
+      if (picked != null) {
+        /// Check if the picked date is after the end date
+        if (endDate != null && picked.isAfter(endDate!)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Start date cannot be after end date')),
+          );
+          return;
+        }
+        setState(() => startDate = picked);
+      }
+    } else {
+      final picked = await TimeUtils.showDateTimePicker(context, endDate);
+      if (picked != null) {
+        /// Check if the picked date is before the start date
+        if (startDate != null && picked.isBefore(startDate!)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('End date cannot be before start date')),
+          );
+          return;
+        }
+        setState(() => endDate = picked);
+      }
     }
   }
 
@@ -140,8 +188,7 @@ class _MonthActionEventState extends State<MonthActionEvent> {
                           }, child: const Padding(
                         padding: EdgeInsets.all(5.0),
                         child: BackButtonIcon(),
-                      )
-                      ),
+                      )),
                       const Spacer(),
                       ButtonDefault(
                         onTap: (){
@@ -150,6 +197,28 @@ class _MonthActionEventState extends State<MonthActionEvent> {
                         child: const Text("Save", style: TextStyle(color: Colors.white, fontSize: 16),),
                       )
                     ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildContentGroup(
+                    title: "ID",
+                    content: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 1, color: Colors.grey.shade700),
+                        borderRadius: BorderRadius.circular(5.0),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              id,
+                              style: const TextStyle(fontSize: 13, color: Colors.black),
+                            ),
+                          ),
+                          Icon(Icons.tag, color: DataApp.mainColor,)
+                        ],
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 16),
                   // Title
@@ -171,10 +240,19 @@ class _MonthActionEventState extends State<MonthActionEvent> {
                             controller: titleController,
                             style: const TextStyle(fontSize: 13, color: Colors.black),
                             maxLines: 1,
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                            decoration: InputDecoration(
+                              suffixIcon: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+                                child: Icon(Icons.title, color: DataApp.mainColor,),
+                              ),
+                              suffixIconConstraints: const BoxConstraints(
+                                maxWidth: 30,
+                                maxHeight: 30,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                               isDense: true,
-                              border: OutlineInputBorder(),
+                              border: const OutlineInputBorder(),
+                              labelText: 'Input title',
                             ),
                           ),)
                       ),
@@ -187,45 +265,87 @@ class _MonthActionEventState extends State<MonthActionEvent> {
                       controller: descriptionController,
                       style: const TextStyle(fontSize: 13, color: Colors.black),
                       maxLines: 1,
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                      decoration:  InputDecoration(
+                        suffixIcon: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 2.0),
+                          child: Icon(Icons.description, color: DataApp.mainColor,),
+                        ),
+                        suffixIconConstraints: const BoxConstraints(
+                          maxWidth: 30,
+                          maxHeight: 30,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
                         isDense: true,
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Input description',
                       ),
                     ),
                   ),
-                  // Start Date
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('From'),
-                    subtitle: Text(startDate != null
-                        ? startDate.toString()
-                        : 'Empty'),
-                    trailing: const Icon(Icons.access_time),
-                    onTap: () async {
-                      final picked = await TimeUtils.showDateTimePicker(context, startDate);
-                      if (picked != null) {
-                        setState(() => startDate = picked);
-                      }
-                    },
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildContentGroup(
+                            title: "From",
+                            content: ClickUtils(
+                              onTap: () async {
+                                onPickDateTime(isStart: true);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(width: 1, color: Colors.grey.shade700),
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        startDate != null ? "${TimeUtils.formatMonthYear(startDate!, format: "d/M/yyyy")} ${TimeUtils.formatMonthYear(startDate!, format: "h:mma")}"
+                                            : 'Empty',
+                                        style: const TextStyle(fontSize: 13, color: Colors.black),
+                                      ),
+                                    ),
+                                    Icon(Icons.access_time, size: 17, color: DataApp.mainColor)
+                                  ],
+                                ),
+                              ),
+                            )
+                        ),
+                      ),
+                      const SizedBox(width: 10.0),
+                      Expanded(
+                        child: _buildContentGroup(
+                            title: "To",
+                            content: ClickUtils(
+                              onTap: () async {
+                                onPickDateTime(isStart: false);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(width: 1, color: Colors.grey.shade700),
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        endDate != null
+                                            ? "${TimeUtils.formatMonthYear(endDate!, format: "d/M/yyyy")} ${TimeUtils.formatMonthYear(endDate!, format: "h:mma")}"
+                                            : 'Empty',
+                                        style: const TextStyle(fontSize: 13, color: Colors.black),
+                                      ),
+                                    ),
+                                    Icon(Icons.flag, size: 17, color: DataApp.mainColor)
+                                  ],
+                                ),
+                              ),
+                            )
+                        ),
+                      ),
+                    ],
                   ),
-
-                  // End Date
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('To'),
-                    subtitle: Text(endDate != null
-                        ? endDate.toString()
-                        : 'Empty'),
-                    trailing: const Icon(Icons.flag),
-                    onTap: () async {
-                      final picked = await TimeUtils.showDateTimePicker(context, endDate);
-                      if (picked != null) {
-                        setState(() => endDate = picked);
-                      }
-                    },
-                  ),
-
                   const SizedBox(height: 20),
 
                   _buildContentGroup(
@@ -271,3 +391,4 @@ Widget _buildContentGroup({required String title, required Widget content}) {
     ],
   );
 }
+

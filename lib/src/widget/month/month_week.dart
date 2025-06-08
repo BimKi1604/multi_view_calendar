@@ -103,7 +103,7 @@ class _MonthViewState extends State<MonthView> {
   }
 
   void _onAddEvent() {
-    ShowUtils.showFullScreenDialog(context, child: MonthActionEvent());
+    ShowUtils.showFullScreenDialog(context, child: const MonthActionEvent());
   }
 
   @override
@@ -171,6 +171,9 @@ class _MonthViewState extends State<MonthView> {
                 time: timeOfDay,
                 isFirst: index == 0,
                 isLast: index == events.length - 1,
+                callback: () {
+                  ShowUtils.showFullScreenDialog(context, child: MonthActionEvent(event: event));
+                },
               );
             },
           )
