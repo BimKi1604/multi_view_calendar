@@ -97,7 +97,7 @@ class _MultiViewCalendarState extends State<MultiViewCalendar> {
         view = MonthView(month: _currentDate, events: widget.events);
         break;
       case CalendarViewType.year:
-        view = YearView(year: _currentDate, events: widget.events);
+        view = const YearView(year: 2025);
         break;
     }
 
