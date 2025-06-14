@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/position_event.dart';
@@ -13,7 +16,7 @@ class DayView extends StatefulWidget {
   final DateTime date;
   final List<CalendarEvent> events;
   final bool showTimeLabels;
-  final bool onlyDay;
+  final bool onlyDay; /// Just show itself
 
   const DayView({
     super.key,
@@ -29,6 +32,7 @@ class DayView extends StatefulWidget {
 
 class _DayViewState extends State<DayView> {
   late final Timer _timer;
+  late DateTime initDate;
 
   @override
   void initState() {
@@ -37,6 +41,7 @@ class _DayViewState extends State<DayView> {
         if (mounted) setState(() {});
       });
     }
+    initDate = widget.date;
     super.initState();
   }
 
@@ -58,30 +63,51 @@ class _DayViewState extends State<DayView> {
     final Size screenSize = MediaQuery.of(context).size;
 
     return SingleChildScrollView(
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Visibility(
             visible: widget.onlyDay,
-            child: const DividerTimeNow(),
-          ),
-          Row(
-            children: [
-              /// Left Time Column
-              Visibility(
-                  visible: widget.onlyDay,
-                  child: const TimeColumn()),
-  
-              /// Scrollable horizontal day columns
-              Expanded(
-                child: SizedBox(
-                  width: screenSize.width,
-                  child: Stack(
-                    children: [
-                      if (widget.showTimeLabels) const DayTimeLines(),
-                      ...positionedEvents.map((e) => DayViewEventTile(positionedEvent: e)),
-                    ],
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 5.0, left: 15),
+              child: Row(
+                children: [
+                  Text(
+                    TimeUtils.formatMonthYear(initDate),
+                    style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
                   ),
-                ),
+                  const SizedBox(width: 2.0),
+                  const Icon(Icons.keyboard_arrow_down, size: 20, color: Colors.grey,)
+                ],
+              ),
+            ),
+          ),
+          Stack(
+            children: [
+              Visibility(
+                visible: widget.onlyDay,
+                child: const DividerTimeNow(),
+              ),
+              Row(
+                children: [
+                  /// Left Time Column
+                  Visibility(
+                      visible: widget.onlyDay,
+                      child: const TimeColumn()),
+
+                  /// Scrollable horizontal day columns
+                  Expanded(
+                    child: SizedBox(
+                      width: screenSize.width,
+                      child: Stack(
+                        children: [
+                          if (widget.showTimeLabels) const DayTimeLines(),
+                          ...positionedEvents.map((e) => DayViewEventTile(positionedEvent: e)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

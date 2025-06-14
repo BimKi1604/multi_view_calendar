@@ -172,7 +172,7 @@ class _WeekViewState extends State<WeekView> {
                                             color: DataApp.borderColor,
                                             width: 1,
                                           )
-                                        )
+                                        ),
                                       ),
                                       child: DayView(
                                         date: day,
