@@ -5,6 +5,7 @@ import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/utils/show_utils.dart';
 import 'package:multi_view_calendar/src/utils/time_utils.dart';
 import 'package:multi_view_calendar/src/widget/day/day_view.dart';
+import 'package:multi_view_calendar/src/widget/elements/time_column.dart';
 
 class WeekView extends StatefulWidget {
   final DateTime weekStartDate;
@@ -153,7 +154,7 @@ class _WeekViewState extends State<WeekView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Left Time Column
-                          ShowUtils.buildTimeColumn(),
+                          const TimeColumn(),
 
                           // Scrollable horizontal day columns
                           Expanded(

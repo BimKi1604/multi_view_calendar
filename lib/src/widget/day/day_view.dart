@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/position_event.dart';
-import 'package:multi_view_calendar/src/utils/show_utils.dart';
 import 'package:multi_view_calendar/src/utils/time_utils.dart';
+import 'package:multi_view_calendar/src/widget/day/day_time_lines.dart';
 import 'package:multi_view_calendar/src/widget/day/day_view_event_tile.dart';
+import 'package:multi_view_calendar/src/widget/day/divider_time_now.dart';
+import 'package:multi_view_calendar/src/widget/elements/time_column.dart';
 
 class DayView extends StatefulWidget {
   final DateTime date;
@@ -60,36 +62,14 @@ class _DayViewState extends State<DayView> {
         children: [
           Visibility(
             visible: widget.onlyDay,
-            child: Positioned(
-              top: TimeUtils.currentTimeTop - 3,
-              left: DataApp.widthTimeColumn - 11,
-              right: 0,
-              child: Row(
-                children: [
-                  Container(
-                    width: 10,
-                    height: 10,
-                    decoration: BoxDecoration(
-                      color: DataApp.iconColor,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: 1.5,
-                      color: DataApp.iconColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            child: const DividerTimeNow(),
           ),
           Row(
             children: [
               /// Left Time Column
               Visibility(
                   visible: widget.onlyDay,
-                  child: ShowUtils.buildTimeColumn()),
+                  child: const TimeColumn()),
   
               /// Scrollable horizontal day columns
               Expanded(
@@ -97,7 +77,7 @@ class _DayViewState extends State<DayView> {
                   width: screenSize.width,
                   child: Stack(
                     children: [
-                      if (widget.showTimeLabels) _buildTimeLines(),
+                      if (widget.showTimeLabels) const DayTimeLines(),
                       ...positionedEvents.map((e) => DayViewEventTile(positionedEvent: e)),
                     ],
                   ),
@@ -106,25 +86,6 @@ class _DayViewState extends State<DayView> {
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTimeLines() {
-    return SingleChildScrollView(
-      physics: const NeverScrollableScrollPhysics(),
-      child: Column(
-        children: List.generate(24, (index) {
-          return Container(
-            height: DataApp.heightEvent,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              border: Border(
-                top: BorderSide(color: Colors.grey.shade300, width: 0.5),
-              ),
-            ),
-          );
-        }),
       ),
     );
   }
