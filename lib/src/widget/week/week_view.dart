@@ -4,7 +4,7 @@ import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/utils/show_utils.dart';
 import 'package:multi_view_calendar/src/utils/time_utils.dart';
-import 'package:multi_view_calendar/src/widget/day_view.dart';
+import 'package:multi_view_calendar/src/widget/day/day_view.dart';
 
 class WeekView extends StatefulWidget {
   final DateTime weekStartDate;

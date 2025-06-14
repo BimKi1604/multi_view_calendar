@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/data/calendar_view_type.dart';
 import 'elements/calendar_header.dart';
-import 'day_view.dart';
+import 'day/day_view.dart';
 import 'month/month_week.dart';
-import 'week_view.dart';
-import 'year_view.dart';
+import 'week/week_view.dart';
+import 'year/year_view.dart';
 
 class MultiViewCalendar extends StatefulWidget {
   final DateTime initialDate;

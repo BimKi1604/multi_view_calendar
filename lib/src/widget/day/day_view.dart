@@ -5,7 +5,7 @@ import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/position_event.dart';
 import 'package:multi_view_calendar/src/utils/show_utils.dart';
 import 'package:multi_view_calendar/src/utils/time_utils.dart';
-import 'package:multi_view_calendar/src/widget/day_view_event_tile.dart';
+import 'package:multi_view_calendar/src/widget/day/day_view_event_tile.dart';
 
 class DayView extends StatefulWidget {
   final DateTime date;

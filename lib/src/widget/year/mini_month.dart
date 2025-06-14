@@ -1,64 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/utils/time_utils.dart';
+import 'package:shimmer_effects_plus/shimmer_effects_plus.dart';
 
-class YearView extends StatelessWidget {
+class MiniMonth extends StatefulWidget {
   final int year;
+  final int month;
 
-  const YearView({super.key, required this.year});
+  const MiniMonth({super.key, required this.year, required this.month});
+
+  @override
+  State<MiniMonth> createState() => _MiniMonthState();
+}
+
+class _MiniMonthState extends State<MiniMonth> {
+
+  bool _loaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(milliseconds: widget.month * 160), () {
+      if (mounted) setState(() => _loaded = true);
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Text(
-            year.toString(),
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10.0,),
-          GridView.count(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 3,
-            padding: const EdgeInsets.all(8),
-            childAspectRatio: 0.85,
-            children: List.generate(12, (index) {
-              final month = index + 1;
-              return _buildMonth(context, year, month);
-            }),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildMonth(BuildContext context, int year, int month) {
-    final firstDay = DateTime(year, month, 1);
-    final totalDays = DateUtils.getDaysInMonth(year, month);
-    final startWeekday = firstDay.weekday; // 1 = Monday => 7 = Sunday
-
-    final days = <DateTime?>[];
-
-    // Add empty boxes for days before the 1st
-    for (int i = 1; i < startWeekday; i++) {
-      days.add(null);
+    if (!_loaded) {
+      return ShimmerEffectWidget.cover(
+        subColor: Colors.grey[300]!,
+        mainColor: Colors.grey[100]!,
+        period: const Duration(milliseconds: 260),
+        direction: ShimmerDirection.ttb,
+        child: Container(width: double.infinity, height: double.infinity, color: Colors.white, margin: const EdgeInsets.all(5.0),),
+      );
     }
 
-    // Add all days of the month
-    for (int i = 1; i <= totalDays; i++) {
-      days.add(DateTime(year, month, i));
-    }
+    final firstDay = DateTime(widget.year, widget.month, 1);
+    final totalDays = DateUtils.getDaysInMonth(widget.year, widget.month);
+    final startWeekday = firstDay.weekday;
 
-    Color getColorForWeekday(DateTime? day) {
-      if (day == null) return Colors.transparent;
-      if (day.weekday == DateTime.sunday) {
-        return Colors.red; // Sunday
-      }
-      return Colors.black87;
-    }
+    final days = List<DateTime?>.filled(startWeekday - 1, null) +
+        List.generate(totalDays, (i) => DateTime(widget.year, widget.month, i + 1));
 
     return Container(
       padding: const EdgeInsets.all(1),
@@ -70,7 +56,7 @@ class YearView extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            TimeUtils.monthLabel(month),
+            TimeUtils.monthLabel(widget.month),
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
@@ -91,19 +77,23 @@ class YearView extends StatelessWidget {
                 final day = days[index];
                 return Center(
                   child: Container(
-                    decoration: DateUtils.isSameDay(day, DateTime.now()) ? BoxDecoration( // Highlight today's date
+                    decoration: DateUtils.isSameDay(day, DateTime.now())
+                        ? BoxDecoration(
                       border: Border.all(
                         width: 1,
-                        color: DataApp.mainColor
+                        color: DataApp.mainColor,
                       ),
-                      borderRadius: BorderRadius.circular(3.0)
-                    ) : null,
+                      borderRadius: BorderRadius.circular(3.0),
+                    )
+                        : null,
                     child: Text(
                       day?.day.toString() ?? '',
                       style: TextStyle(
                         fontSize: 9,
                         fontWeight: FontWeight.w500,
-                        color: getColorForWeekday(day),
+                        color: day?.weekday == DateTime.sunday
+                            ? Colors.red
+                            : Colors.black87,
                       ),
                     ),
                   ),
