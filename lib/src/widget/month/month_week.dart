@@ -10,7 +10,7 @@ import 'package:multi_view_calendar/src/widget/month/month_header.dart';
 import 'package:multi_view_calendar/src/widget/elements/weekday_header.dart';
 import 'package:multi_view_calendar/src/widget/month/month_title_task.dart';
 
-import 'month_action_event.dart';
+import '../elements/event_action.dart';
 
 class MonthView extends StatefulWidget {
   final DateTime month;
@@ -106,7 +106,7 @@ class _MonthViewState extends State<MonthView> {
   }
 
   void _onAddEvent() {
-    ShowUtils.showFullScreenDialog(context, child: const MonthActionEvent());
+    ShowUtils.showFullScreenDialog(context, child: const EventAction());
   }
 
   @override
@@ -175,7 +175,7 @@ class _MonthViewState extends State<MonthView> {
                 isFirst: index == 0,
                 isLast: index == events.length - 1,
                 callback: () {
-                  ShowUtils.showFullScreenDialog(context, child: MonthActionEvent(event: event));
+                  ShowUtils.showFullScreenDialog(context, child: EventAction(event: event));
                 },
               );
             },

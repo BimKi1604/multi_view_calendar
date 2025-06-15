@@ -1,7 +1,5 @@
 import 'dart:math';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:multi_view_calendar/src/component/button_default.dart';
 import 'package:multi_view_calendar/src/data/calendar_view_type.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
@@ -10,16 +8,16 @@ import 'package:multi_view_calendar/src/utils/click_utils.dart';
 import 'package:multi_view_calendar/src/utils/string_utils.dart';
 import 'package:multi_view_calendar/src/utils/time_utils.dart';
 
-class MonthActionEvent extends StatefulWidget {
-  const MonthActionEvent({super.key, this.event});
+class EventAction extends StatefulWidget {
+  const EventAction({super.key, this.event});
 
   final CalendarEvent? event;
 
   @override
-  State<MonthActionEvent> createState() => _MonthActionEventState();
+  State<EventAction> createState() => _EventActionState();
 }
 
-class _MonthActionEventState extends State<MonthActionEvent> {
+class _EventActionState extends State<EventAction> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController locationController = TextEditingController();

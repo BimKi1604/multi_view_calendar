@@ -104,12 +104,12 @@ class ShowUtils {
     );
   }
 
-  static Future<DateTime?> showDialogWidget({
+  static Future<dynamic> showDialogWidget({
     required BuildContext context,
     required Widget child,
     Color? color,
   }) async {
-    return showDialog<DateTime>(
+    return showDialog(
       context: context,
       builder: (context) {
         return Theme(

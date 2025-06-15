@@ -7,8 +7,9 @@ import 'package:multi_view_calendar/src/utils/show_utils.dart';
 
 class DayViewEventTile extends StatelessWidget {
   final PositionedEvent positionedEvent;
+  final Function(List<CalendarEvent>) actionEvent;
 
-  const DayViewEventTile({super.key, required this.positionedEvent});
+  const DayViewEventTile({super.key, required this.positionedEvent, required this.actionEvent});
 
   String title(){
    if (positionedEvent.events.length == 1) return positionedEvent.events.first.title;
@@ -36,7 +37,7 @@ class DayViewEventTile extends StatelessWidget {
       width: positionedEvent.width,
       height: positionedEvent.height,
       child: GestureDetector(
-        onTap: () => _showEventDetails(context, event, colorBG),
+        onTap: () => actionEvent(event),
         onLongPress: () => _showTooltip(context, event, colorBG),
         child: Container(
           margin: const EdgeInsets.all(2),
@@ -60,14 +61,6 @@ class DayViewEventTile extends StatelessWidget {
       return;
     }
     ShowUtils.tooltipMulEvent(context, events, color);
-  }
-
-  void _showEventDetails(BuildContext context, List<CalendarEvent> events, Color color) {
-    if (events.length == 1) {
-      ShowUtils.showSingleEventDetails(context, events.first, color);
-      return;
-    }
-    ShowUtils.showEventsDetails(context, events, color);
   }
 
 }

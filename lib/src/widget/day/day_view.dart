@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/position_event.dart';
@@ -10,8 +12,10 @@ import 'package:multi_view_calendar/src/widget/day/day_time_lines.dart';
 import 'package:multi_view_calendar/src/widget/day/day_view_event_tile.dart';
 import 'package:multi_view_calendar/src/widget/day/divider_time_now.dart';
 import 'package:multi_view_calendar/src/widget/day/lazy_week_view.dart';
+import 'package:multi_view_calendar/src/widget/day/select_event_group.dart';
 import 'package:multi_view_calendar/src/widget/elements/pretty_day_picker.dart';
 import 'package:multi_view_calendar/src/widget/elements/time_column.dart';
+import 'package:multi_view_calendar/src/widget/elements/event_action.dart';
 
 class DayView extends StatefulWidget {
   final DateTime date;
@@ -76,6 +80,16 @@ class _DayViewState extends State<DayView> {
     });
   }
 
+  void _onActionEvent({List<CalendarEvent>? events}) {
+    if (events != null) {
+      ShowUtils.showDialogWidget(
+          context: context,
+          child: SelectEventGroup(events: events,)
+      );
+    }
+    // ShowUtils.showFullScreenDialog(context, child: EventAction(event: events));
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<CalendarEvent> eventsFilter = TimeUtils.getEventDay(
@@ -85,75 +99,110 @@ class _DayViewState extends State<DayView> {
     final List<PositionedEvent> positionedEvents = _calculateEventPositions(eventsFilter);
     final Size screenSize = MediaQuery.of(context).size;
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Visibility(
-            visible: widget.onlyDay,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: ClickUtils(
-                onTap: (){
-                  _onShowSelectedDate();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        TimeUtils.formatMonthYear(_selectedDate, format: "MMM d, yyyy"),
-                        style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
-                      ),
-                      const SizedBox(width: 2.0),
-                      const Icon(Icons.keyboard_arrow_down, size: 20, color: Colors.grey,)
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Visibility(
-            visible: widget.onlyDay,
-            child: LazyWeekView(
-              setSelected: (date) {
-                _setSelectedDate(date);
-              },
-              selectedDate: _selectedDate,
-            ),
-          ),
-          Stack(
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              /// header date
               Visibility(
                 visible: widget.onlyDay,
-                child: const DividerTimeNow(),
-              ),
-              Row(
-                children: [
-                  /// Left Time Column
-                  Visibility(
-                      visible: widget.onlyDay,
-                      child: const TimeColumn()),
-
-                  /// Scrollable horizontal day columns
-                  Expanded(
-                    child: SizedBox(
-                      width: screenSize.width,
-                      child: Stack(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: ClickUtils(
+                    onTap: (){
+                      _onShowSelectedDate();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (widget.showTimeLabels) const DayTimeLines(),
-                          ...positionedEvents.map((e) => DayViewEventTile(positionedEvent: e)),
+                          Text(
+                            TimeUtils.formatMonthYear(_selectedDate, format: "MMM d, yyyy"),
+                            style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
+                          ),
+                          const SizedBox(width: 2.0),
+                          const Icon(Icons.keyboard_arrow_down, size: 20, color: Colors.grey,)
                         ],
                       ),
                     ),
+                  ),
+                ),
+              ),
+              /// lazy scroll horizontal week view
+              Visibility(
+                visible: widget.onlyDay,
+                child: LazyWeekView(
+                  setSelected: (date) {
+                    _setSelectedDate(date);
+                  },
+                  selectedDate: _selectedDate,
+                ),
+              ),
+              /// body day view
+              Stack(
+                children: [
+                  Visibility(
+                    visible: widget.onlyDay,
+                    child: const DividerTimeNow(),
+                  ),
+                  Row(
+                    children: [
+                      /// Left Time Column
+                      Visibility(
+                          visible: widget.onlyDay,
+                          child: const TimeColumn()),
+
+                      /// Scrollable horizontal day columns
+                      Expanded(
+                        child: SizedBox(
+                          width: screenSize.width,
+                          child: Stack(
+                            children: [
+                              if (widget.showTimeLabels) const DayTimeLines(),
+                              ...positionedEvents.map((e) => DayViewEventTile(
+                                  positionedEvent: e,
+                                actionEvent: (events) {
+                                  _onActionEvent(events: events);
+                                },
+                              )),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ],
           ),
-        ],
-      ),
+        ),
+        Visibility(
+          visible: widget.onlyDay,
+          child: Positioned(
+            bottom: 15,
+            right: 15,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: DataApp.mainColor
+              ),
+              child: ClickUtils(
+                onTap: (){
+                  _onActionEvent();
+                },
+                borderRadius: BorderRadius.circular(50.0),
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Icon(Icons.add, color: Colors.white, size: 26),
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 
