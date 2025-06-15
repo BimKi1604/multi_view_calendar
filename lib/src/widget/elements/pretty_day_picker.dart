@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_view_calendar/src/data/calendar_view_type.dart';
@@ -126,6 +127,7 @@ class _PrettyDayPickerState extends State<PrettyDayPicker> {
                 Navigator.of(context).pop(_selectedDate);
               },
               child: Container(
+                padding: const EdgeInsets.only(top: 2.0),
                 decoration: BoxDecoration(
                   color: isSelected ? DataApp.mainColor : Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -139,12 +141,16 @@ class _PrettyDayPickerState extends State<PrettyDayPicker> {
                       style: TextStyle(
                         color: isSelected ? Colors.white : Colors.black87,
                         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontSize: 13
                       ),
                     ),
-                    // Positioned(
-                    //   top: 10,
-                    //   child: Text("Today", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: DataApp.mainColor))
-                    // )
+                    Visibility(
+                      visible: isToday,
+                      child: Positioned(
+                        top: 0,
+                        child: Text("Today", style: TextStyle(fontSize: 6, fontWeight: FontWeight.w900, color: DataApp.mainColor))
+                      ),
+                    )
                   ],
                 ),
               ),
