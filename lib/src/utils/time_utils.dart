@@ -121,5 +121,11 @@ class TimeUtils {
     final rand = Random();
     return '${DateTime.now().millisecondsSinceEpoch}_${rand.nextInt(10000)}';
   }
+
+  static bool isSameWeek(DateTime a, DateTime b) {
+    final mondayA = a.subtract(Duration(days: a.weekday - 1));
+    final mondayB = b.subtract(Duration(days: b.weekday - 1));
+    return mondayA.year == mondayB.year && mondayA.month == mondayB.month && mondayA.day == mondayB.day;
+  }
 }
 

@@ -3,6 +3,7 @@ import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/utils/show_utils.dart';
 import 'package:multi_view_calendar/src/utils/time_utils.dart';
+import 'package:multi_view_calendar/src/widget/elements/pretty_month_picker.dart';
 import 'package:multi_view_calendar/src/widget/month/month_body.dart';
 import 'package:multi_view_calendar/src/widget/month/month_event_tile.dart';
 import 'package:multi_view_calendar/src/widget/month/month_header.dart';
@@ -90,9 +91,11 @@ class _MonthViewState extends State<MonthView> {
   }
 
   void _onOpenSelectMonth(BuildContext context) async {
-    DateTime? month = await ShowUtils.showPrettyMonthPicker(
+    DateTime? month = await ShowUtils.showDialogWidget(
       context: context,
-      initialDate: initDate,
+      child: PrettyMonthPicker(
+        initialDate: initDate,
+      ),
     );
     if (month == null) return;
     if (!mounted) return;

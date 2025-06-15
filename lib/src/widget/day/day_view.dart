@@ -1,15 +1,16 @@
 import 'dart:async';
-import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/position_event.dart';
+import 'package:multi_view_calendar/src/utils/click_utils.dart';
+import 'package:multi_view_calendar/src/utils/show_utils.dart';
 import 'package:multi_view_calendar/src/utils/time_utils.dart';
 import 'package:multi_view_calendar/src/widget/day/day_time_lines.dart';
 import 'package:multi_view_calendar/src/widget/day/day_view_event_tile.dart';
 import 'package:multi_view_calendar/src/widget/day/divider_time_now.dart';
+import 'package:multi_view_calendar/src/widget/day/lazy_week_view.dart';
+import 'package:multi_view_calendar/src/widget/elements/pretty_day_picker.dart';
 import 'package:multi_view_calendar/src/widget/elements/time_column.dart';
 
 class DayView extends StatefulWidget {
@@ -32,7 +33,7 @@ class DayView extends StatefulWidget {
 
 class _DayViewState extends State<DayView> {
   late final Timer _timer;
-  late DateTime initDate;
+  late DateTime _selectedDate;
 
   @override
   void initState() {
@@ -41,8 +42,15 @@ class _DayViewState extends State<DayView> {
         if (mounted) setState(() {});
       });
     }
-    initDate = widget.date;
+    _selectedDate = widget.date;
     super.initState();
+  }
+
+  void _setSelectedDate(DateTime newDate) {
+    if (!mounted) return;
+    setState(() {
+      _selectedDate = newDate;
+    });
   }
 
   @override
@@ -53,10 +61,24 @@ class _DayViewState extends State<DayView> {
     super.dispose();
   }
 
+  void _onShowSelectedDate() async {
+    DateTime? month = await ShowUtils.showDialogWidget(
+      context: context,
+      child: PrettyDayPicker(
+        initialDate: _selectedDate,
+      ),
+    );
+    if (month == null) return;
+    if (!mounted) return;
+    setState(() {
+      _selectedDate = month;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<CalendarEvent> eventsFilter = TimeUtils.getEventDay(
-      day: widget.date,
+      day: _selectedDate,
       totalEvents: widget.events,
     );
     final List<PositionedEvent> positionedEvents = _calculateEventPositions(eventsFilter);
@@ -69,17 +91,35 @@ class _DayViewState extends State<DayView> {
           Visibility(
             visible: widget.onlyDay,
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 5.0, left: 15),
-              child: Row(
-                children: [
-                  Text(
-                    TimeUtils.formatMonthYear(initDate),
-                    style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
+              padding: const EdgeInsets.only(left: 10),
+              child: ClickUtils(
+                onTap: (){
+                  _onShowSelectedDate();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        TimeUtils.formatMonthYear(_selectedDate, format: "MMM d, yyyy"),
+                        style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
+                      ),
+                      const SizedBox(width: 2.0),
+                      const Icon(Icons.keyboard_arrow_down, size: 20, color: Colors.grey,)
+                    ],
                   ),
-                  const SizedBox(width: 2.0),
-                  const Icon(Icons.keyboard_arrow_down, size: 20, color: Colors.grey,)
-                ],
+                ),
               ),
+            ),
+          ),
+          Visibility(
+            visible: widget.onlyDay,
+            child: LazyWeekView(
+              setSelected: (date) {
+                _setSelectedDate(date);
+              },
+              selectedDate: _selectedDate,
             ),
           ),
           Stack(
