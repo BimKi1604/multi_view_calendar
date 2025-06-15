@@ -107,13 +107,23 @@ class ShowUtils {
   static Future<DateTime?> showDialogWidget({
     required BuildContext context,
     required Widget child,
+    Color? color,
   }) async {
     return showDialog<DateTime>(
       context: context,
       builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: child,
+        return Theme(
+          data: Theme.of(context).copyWith(
+            dialogBackgroundColor: color,
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+              surface: color,
+              surfaceTint: Colors.transparent,
+            ),
+          ),
+          child: Dialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: child,
+          ),
         );
       },
     );

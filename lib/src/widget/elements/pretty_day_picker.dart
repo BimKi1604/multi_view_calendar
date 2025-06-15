@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:multi_view_calendar/src/data/calendar_view_type.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
+import 'package:multi_view_calendar/src/utils/click_utils.dart';
 
 class PrettyDayPicker extends StatefulWidget {
   final DateTime initialDate;
@@ -27,6 +29,24 @@ class _PrettyDayPickerState extends State<PrettyDayPicker> {
     _daysInMonth = DateUtils.getDaysInMonth(_selectedDate.year, _selectedDate.month);
   }
 
+  void onChangedDayOfMonth(ChangedDay change) {
+    if (!mounted) return;
+    setState(() {
+      _selectedDate = DateTime(
+        change == ChangedDay.increase
+            ? _selectedDate.year + (_selectedDate.month == 12 ? 1 : 0)
+            : _selectedDate.year - (_selectedDate.month == 1 ? 1 : 0),
+        change == ChangedDay.increase
+            ? (_selectedDate.month % 12) + 1
+            : (_selectedDate.month == 1 ? 12 : _selectedDate.month - 1),
+        1,
+      );
+    });
+
+    _firstDayOfMonth = _selectedDate;
+    _daysInMonth = DateUtils.getDaysInMonth(_selectedDate.year, _selectedDate.month);
+  }
+
   @override
   Widget build(BuildContext context) {
     final weekdayOffset = _firstDayOfMonth.weekday - 1; // Monday = 1
@@ -35,10 +55,46 @@ class _PrettyDayPickerState extends State<PrettyDayPicker> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Text(
-            DateFormat('MMMM yyyy').format(_firstDayOfMonth),
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ClickUtils(
+                  onTap: (){
+                    onChangedDayOfMonth(ChangedDay.decrease);
+                  },
+                  borderRadius: BorderRadius.circular(50.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(width: 1, color: Colors.grey.shade400)
+                    ),
+                    child: const Icon(Icons.chevron_left, size: 21, color: Colors.black),
+                  )
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 7.5),
+                child: Text(
+                  DateFormat('MMMM yyyy').format(_firstDayOfMonth),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+              ClickUtils(
+                  onTap: (){
+                    onChangedDayOfMonth(ChangedDay.increase);
+                  },
+                  borderRadius: BorderRadius.circular(50.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(5.0),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(width: 1, color: Colors.grey.shade400)
+                    ),
+                    child: const Icon(Icons.chevron_right, size: 21, color: Colors.black),
+                  )
+              ),
+            ],
           ),
         ),
         _buildWeekdayLabels(),
@@ -71,17 +127,25 @@ class _PrettyDayPickerState extends State<PrettyDayPicker> {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: isSelected ? DataApp.mainColor : Colors.grey[200],
+                  color: isSelected ? DataApp.mainColor : Colors.white,
                   borderRadius: BorderRadius.circular(8),
                   border: isToday ? Border.all(color: Colors.redAccent, width: 1.2) : null,
                 ),
-                alignment: Alignment.center,
-                child: Text(
-                  day.toString(),
-                  style: TextStyle(
-                    color: isSelected ? Colors.white : Colors.black87,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Text(
+                      day.toString(),
+                      style: TextStyle(
+                        color: isSelected ? Colors.white : Colors.black87,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      ),
+                    ),
+                    // Positioned(
+                    //   top: 10,
+                    //   child: Text("Today", style: TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: DataApp.mainColor))
+                    // )
+                  ],
                 ),
               ),
             );

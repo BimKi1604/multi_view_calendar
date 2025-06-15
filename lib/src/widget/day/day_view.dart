@@ -67,6 +67,7 @@ class _DayViewState extends State<DayView> {
       child: PrettyDayPicker(
         initialDate: _selectedDate,
       ),
+      color: Colors.white
     );
     if (month == null) return;
     if (!mounted) return;

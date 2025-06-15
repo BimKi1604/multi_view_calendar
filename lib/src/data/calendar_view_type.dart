@@ -14,3 +14,7 @@ enum MeetingPlatform {
   teams,
   other
 }
+
+enum ChangedDay {
+  increase, decrease
+}
