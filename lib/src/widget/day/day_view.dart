@@ -80,14 +80,16 @@ class _DayViewState extends State<DayView> {
     });
   }
 
-  void _onActionEvent({List<CalendarEvent>? events}) {
+  void _onActionEvent({List<CalendarEvent>? events}) async {
     if (events != null) {
-      ShowUtils.showDialogWidget(
+      CalendarEvent event = await ShowUtils.showDialogWidget(
           context: context,
           child: SelectEventGroup(events: events,)
       );
+      ShowUtils.showFullScreenDialog(context, child: EventAction(event: event));
+      return;
     }
-    // ShowUtils.showFullScreenDialog(context, child: EventAction(event: events));
+    ShowUtils.showFullScreenDialog(context, child: const EventAction());
   }
 
   @override
