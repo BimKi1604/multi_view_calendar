@@ -112,7 +112,6 @@ class _MultiViewCalendarState extends State<MultiViewCalendar> {
           onViewChange: _changeView,
         ),
         const Divider(height: 1),
-        const SizedBox(height: 20.0,),
         Flexible(child: view),
       ],
     );

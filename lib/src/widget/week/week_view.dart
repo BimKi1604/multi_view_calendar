@@ -8,6 +8,7 @@ import 'package:multi_view_calendar/src/utils/time_utils.dart';
 import 'package:multi_view_calendar/src/widget/day/day_view.dart';
 import 'package:multi_view_calendar/src/widget/elements/event_action.dart';
 import 'package:multi_view_calendar/src/widget/elements/time_column.dart';
+import 'package:multi_view_calendar/src/widget/week/week_selector.dart';
 
 class WeekView extends StatefulWidget {
   final DateTime weekStartDate;
@@ -24,10 +25,9 @@ class WeekView extends StatefulWidget {
 }
 
 class _WeekViewState extends State<WeekView> {
-
+  late DateTime weekStartDate;
   ScrollController controller = ScrollController();
   ScrollController bodyController = ScrollController();
-  DateTime now = DateTime.now();
   late final Timer _timer;
 
   @override
@@ -35,6 +35,7 @@ class _WeekViewState extends State<WeekView> {
     bodyController.addListener(() {
       controller.jumpTo(bodyController.offset);
     });
+    weekStartDate = widget.weekStartDate;
     _timer = Timer.periodic(const Duration(minutes: 1), (_) {
       if (mounted) setState(() {});
     });
@@ -53,11 +54,19 @@ class _WeekViewState extends State<WeekView> {
     ShowUtils.showFullScreenDialog(context, child: const EventAction());
   }
 
+  void _onSelectWeek(DateTime startWeek, DateTime endWeek) {
+    setState(() {
+      weekStartDate = startWeek;
+    });
+    controller.jumpTo(0);
+    bodyController.jumpTo(0);
+  }
+
   @override
   Widget build(BuildContext context) {
     final days = List.generate(
       7,
-          (index) => widget.weekStartDate.add(Duration(days: index)),
+          (index) => weekStartDate.add(Duration(days: index)),
     );
 
     return Stack(
@@ -73,7 +82,15 @@ class _WeekViewState extends State<WeekView> {
                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
-
+            LazyWeekSelector(
+              selectedDate: weekStartDate,
+              setSelectedWeek: (start, end) {
+                setState(() {
+                  _onSelectWeek(start, end);
+                });
+              },
+            ),
+            const SizedBox(height: 10.0,),
             // Grid: Time column + Scrollable Day columns
             Expanded(
               child: Column(
