@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/models/position_event.dart';
@@ -41,6 +39,7 @@ class _DayViewState extends State<DayView> {
 
   @override
   void initState() {
+    print(widget.date);
     if (widget.onlyDay) {
       _timer = Timer.periodic(const Duration(minutes: 1), (_) {
         if (mounted) setState(() {});

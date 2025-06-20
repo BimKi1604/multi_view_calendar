@@ -10,6 +10,8 @@ import 'package:multi_view_calendar/src/widget/elements/event_action.dart';
 import 'package:multi_view_calendar/src/widget/elements/time_column.dart';
 import 'package:multi_view_calendar/src/widget/week/week_selector.dart';
 
+import 'week_row_item.dart';
+
 class WeekView extends StatefulWidget {
   final DateTime weekStartDate;
   final List<CalendarEvent> events;
@@ -68,7 +70,6 @@ class _WeekViewState extends State<WeekView> {
       7,
           (index) => weekStartDate.add(Duration(days: index)),
     );
-
     return Stack(
       children: [
         Column(
@@ -108,42 +109,7 @@ class _WeekViewState extends State<WeekView> {
                         shrinkWrap: true,
                         itemBuilder: (_, index) {
                           final date = days[index];
-                          return Container(
-                            height: DataApp.heightEvent,
-                            width: DataApp.widthEvent,
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              border: const Border(
-                                right: BorderSide(
-                                  width: 1,
-                                  color: Colors.white
-                                )
-                              ),
-                              color: DataApp.mainColor,
-                            ),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 7.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      '${TimeUtils.weekdayLabel(date.weekday)}\n${date.day}/${date.month}',
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-                                    ),
-                                    const SizedBox(width: 7.0),
-                                    Visibility(
-                                      visible: TimeUtils.isToday(date),
-                                        child: ShowUtils.eventWidget(
-                                          child: Icon(Icons.today, color: DataApp.iconColor, size: 11,)
-                                        )
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
+                          return WeekRowItem(date: date);
                         }
                     ),
                   ),
@@ -199,6 +165,7 @@ class _WeekViewState extends State<WeekView> {
                                             ),
                                           ),
                                           child: DayView(
+                                            key: ValueKey(day),
                                             date: day,
                                             onlyDay: false,
                                             events: widget.events,

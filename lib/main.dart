@@ -30,6 +30,13 @@ class CalendarDemoPage extends StatelessWidget {
     final now = DateTime.now();
     final events = [
       CalendarEvent(
+        id: "928",
+        title: 'Meeting with team hello',
+        color: Colors.red,
+        start: DateTime(now.year, now.month, 20, 1, 15),
+        end: DateTime(now.year, now.month, 20, 2 + 1, 15),
+      ),
+      CalendarEvent(
         id: "2",
         title: 'Meeting with team',
         color: Colors.red,

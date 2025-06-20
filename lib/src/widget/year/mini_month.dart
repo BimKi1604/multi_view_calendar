@@ -20,7 +20,7 @@ class _MiniMonthState extends State<MiniMonth> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(milliseconds: widget.month * 160), () {
+    Future.delayed(Duration(milliseconds: widget.month * 140), () {
       if (mounted) setState(() => _loaded = true);
     });
   }

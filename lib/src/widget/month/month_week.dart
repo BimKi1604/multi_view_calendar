@@ -118,6 +118,7 @@ class _MonthViewState extends State<MonthView> {
     return SingleChildScrollView(
       child: Column(
         children: [
+          const SizedBox(height: 20.0),
           Container(
             padding: const EdgeInsets.all(10.0),
             margin: const EdgeInsets.symmetric(horizontal: 20.0),
