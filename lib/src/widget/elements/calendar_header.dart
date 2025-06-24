@@ -27,10 +27,11 @@ class CalendarHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
       child: Row(
         children: [
-          Text(
-            title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          const Text(
+            "Select type",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
+
           const Spacer(),
           DropdownButton<CalendarViewType>(
             value: currentView,

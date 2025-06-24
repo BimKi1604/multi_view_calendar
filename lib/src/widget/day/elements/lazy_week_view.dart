@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/utils/time_utils.dart';
-import 'package:multi_view_calendar/src/widget/day/lazy_week_element.dart';
+import 'package:multi_view_calendar/src/widget/day/elements/lazy_week_element.dart';
 
 class LazyWeekView extends StatefulWidget {
   const LazyWeekView({super.key, required this.setSelected, required this.selectedDate});

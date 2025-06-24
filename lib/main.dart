@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Multi View Calendar Demo',
+
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -88,7 +89,7 @@ class CalendarDemoPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Multi View Calendar')),
+      appBar: AppBar(title: const Text('Demo Calendar')),
       body: MultiViewCalendar(
         initialDate: DateTime.now(),
         events: events,
