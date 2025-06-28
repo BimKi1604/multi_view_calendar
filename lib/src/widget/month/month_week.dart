@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:multi_view_calendar/src/models/calendar_event.dart';
-import 'package:multi_view_calendar/src/widget/month/month_week_state.dart';
+import 'package:multi_view_calendar/src/multi_view_calendar.dart';
+
+import 'month_week_state.dart';
 
 class MonthView extends StatefulWidget {
   final DateTime month;

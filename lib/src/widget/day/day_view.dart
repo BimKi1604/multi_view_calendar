@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
-import 'package:multi_view_calendar/src/widget/day/day_view_state.dart';
+
+import 'day_view_state.dart';
 
 class DayView extends StatefulWidget {
   final DateTime date;

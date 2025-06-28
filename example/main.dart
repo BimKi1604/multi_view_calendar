@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../lib/src/models/calendar_event.dart';
-import '../lib/src/widget/multi_view_calendar_widget.dart';
+import 'package:multi_view_calendar/src/models/calendar_event.dart';
+import 'package:multi_view_calendar/src/widget/multi_view_calendar_widget.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/models/calendar_event.dart';
-import 'package:multi_view_calendar/src/widget/week/week_view_state.dart';
+
+import 'week_view_state.dart';
 
 class WeekView extends StatefulWidget {
   final DateTime weekStartDate;

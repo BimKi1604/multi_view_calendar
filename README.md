@@ -1,44 +1,117 @@
-# multi_view_calendar
+![Pub Version](https://img.shields.io/pub/v/multi_view_calendar)
+![Likes](https://img.shields.io/pub/likes/multi_view_calendar)
+![Popularity](https://img.shields.io/pub/popularity/multi_view_calendar)
 
-A powerful Flutter calendar package with week, month, and year views. Highly customizable, responsive, and ideal for productivity, planner, and scheduling apps.
+### ☕ Buy Me a Coffee
 
-## Getting Started
+[![Buy Me a Coffee](https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png)](https://buymeacoffee.com/bimki)
 
-This project is a starting point for a Flutter application.
+# 📅 Multi View Calendar (Flutter)
 
-A few resources to get you started if this is your first Flutter project:
+`multi_view_calendar` is a powerful and customizable Flutter calendar package that provides **week**, **month**, and **year** views out of the box. It is responsive, efficient, and ideal for productivity, planner, and scheduling apps.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🎬 Demo Video
+| Day Demo                 | Week Demo                 | Month Demo                 | Year Demo                 |
+|--------------------------|---------------------------|----------------------------|---------------------------|
+| ![](assets/demo/day.gif) | ![](assets/demo/week.gif) | ![](assets/demo/month.gif) | ![](assets/demo/year.gif) |
+---
 
-/// # Features
-- **Week View**: Display events in a weekly format with customizable day headers.
-- **Month View**: Show a full month with events, allowing for easy navigation.
-- **Year View**: Present a yearly overview with the ability to select specific months.
-- **Customizable**: Adjust colors, fonts, and styles to match your app's theme.
-- **Responsive Design**: Adapts to different screen sizes and orientations.
-- **Event Management**: Easily add, edit, and delete events with a user-friendly interface.
-- **Localization Support**: Built-in support for multiple languages and date formats.
-- **Performance Optimized**: Efficient rendering for smooth scrolling and interaction.
-- **Accessibility Features**: Designed with accessibility in mind, including screen reader support.
-- **Dark Mode Support**: Automatically adapts to the device's dark mode settings.
-- **Custom Widgets**: Extend functionality with custom widgets for events and headers.
-- **Gesture Support**: Intuitive touch gestures for navigating between views and interacting with events.
-- **Animations**: Smooth transitions between views and event interactions.
-- **Theming**: Fully themeable to fit your app's design language.
-- **Event Filtering**: Filter events by categories or tags for better organization.
-- **Recurring Events**: Support for creating and managing recurring events.
-- **Time Zone Handling**: Automatically adjusts event times based on the user's time zone.
-- **Integration Ready**: Easily integrate with existing Flutter projects or use as a standalone calendar solution.
-- **Documentation**: Comprehensive documentation and examples to help you get started quickly.
-- **Custom Event Colors**: Assign different colors to events based on categories or importance.
-- **Event Details Popup**: View detailed information about events in a popup or modal.
-- 
---
-- **Overlapping events**: Handle overlapping events gracefully with visual indicators.
-- **storage offline**: Store events locally for offline access and sync when online.
-- **Notifications**: Schedule notifications for upcoming events.
+## 🧩 Features
+
+- 📆 **Multiple views**: DayView, WeekView, MonthView, and YearView
+- 🧠 Intelligent layout: Automatically arranges days and weeks
+- 🎨 Fully customizable: Colors, date builders, styles
+- 🔄 Lazy loading support for better performance
+- 📱 Responsive UI for mobile and tablet
+- 📌 Event support with overlapping, tap handling, and tooltips
+- ✅ Built with modular structure (controller, data, widgets, utils)
+- 🔄 Show events by date
+---
+
+## 💡 Use Cases
+
+- Daily, weekly, and monthly planning apps
+- Task and project management tools
+- Scheduling, time-blocking, or team calendars
+- Habit tracking or event tracking apps
+
+---
+
+## 🏗️ Architecture
+
+| Component                                      | Description                                             |
+|------------------------------------------------|---------------------------------------------------------|
+| `DayView`, `WeekView`, `MonthView`, `YearView` | Main calendar views                                     |
+| `ColorUtils`                                   | Helper functions for colors                             |
+| `ShowUtils`                                    | Helper functions for show widget for date               |
+| `TimeUtils`                                    | Helper functions for date calculations and layout logic |
+| `StringUtils`                                  | Helper functions for String logic                       |
+
+---
+
+## 🚀 Getting Started
+
+## 🧾 Constructor Parameters
+
+| Field                            | Type                | Default                   | Description                                                         |
+|----------------------------------|---------------------|---------------------------|---------------------------------------------------------------------|
+| `date` *(DayView)*               | `DateTime`          | **required**              | Initial date used as the reference point when opening the calendar  |
+| `events`                         | List<CalendarEvent> | **required**              | The list of events is displayed by hour.                            |
+| `showTimeLabels` *(DayView)*     | `bool`              | `true`                    | Toggle timeline visibility.                                         |
+| `month`  *(MonthView)*           | `DateTime`          | **required**              | Initial month used as the reference point when opening the calendar |
+| `weekStartDate` *(WeekView)*     | `DateTime`          | **required**              | Initial week used as the reference point when opening the calendar  |
+| `year`                           | `int`               | **required**              | Initial year used as the reference point when opening the calendar  |
+
+---
+## 🚀 Usage
+### ✅ Basic Usage
+#### ⭐ DAY VIEW
+```dart
+DayView(date: _currentDate, events: widget.events)
+```
+
+#### ⭐ WEEK VIEW
+```dart
+WeekView(weekStartDate: _currentDate, events: widget.events);
+```
+
+#### ⭐ MONTH VIEW
+```dart
+MonthView(month: _currentDate, events: widget.events);
+```
+
+#### ⭐ YEAR VIEW
+```dart
+YearView(year: 2025);
+```
+
+---
+
+## ⚙️ Setup
+
+To install the `multi_view_calendar` package, add the following to your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  multi_view_calendar: ^1.0.0
+```
+
+## 📦 Supported SDKs
+
+- **Flutter**: Stable channel
+- **Android**: SDK 21+
+- **iOS**: iOS 9+
+
+---
+
+## 🙌 Contributions
+
+Feel free to open issues or pull requests on [GitHub](https://github.com/BimKi1604/shimmer_effects_plus).
+
+---
+
+## 📄 License
+
+MIT License. See [LICENSE](LICENSE) for details.
