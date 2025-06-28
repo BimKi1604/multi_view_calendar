@@ -1,7 +1,7 @@
 import 'package:multi_view_calendar/src/data/calendar_view_type.dart';
 
 class StringUtils {
-  static MeetingPlatform detectMeetingPlatform (String input) {
+  static MeetingPlatform detectMeetingPlatform(String input) {
     input = input.toLowerCase();
 
     if (input.contains('meet.google.com')) {

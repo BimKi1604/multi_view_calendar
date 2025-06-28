@@ -14,7 +14,6 @@ import 'package:multi_view_calendar/src/widget/month/month_week.dart';
 import '../elements/event_action.dart';
 
 class MonthViewState extends State<MonthView> {
-
   DateTime initDate = DateTime.now();
   DateTime? selectedDate;
 
@@ -132,7 +131,9 @@ class MonthViewState extends State<MonthView> {
                   },
                 ),
                 const WeekdayHeader(),
-                const SizedBox(height: 5.0,),
+                const SizedBox(
+                  height: 5.0,
+                ),
                 MonthBody(
                   days: days,
                   events: widget.events,
@@ -163,7 +164,8 @@ class MonthViewState extends State<MonthView> {
                 isFirst: index == 0,
                 isLast: index == events.length - 1,
                 callback: () {
-                  ShowUtils.showFullScreenDialog(context, child: EventAction(event: event));
+                  ShowUtils.showFullScreenDialog(context,
+                      child: EventAction(event: event));
                 },
               );
             },

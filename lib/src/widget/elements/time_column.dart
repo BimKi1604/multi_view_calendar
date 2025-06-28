@@ -13,10 +13,8 @@ class TimeColumn extends StatelessWidget {
       decoration: BoxDecoration(
           border: Border(
               right: BorderSide(
-                color: DataApp.borderColor,
-              )
-          )
-      ),
+        color: DataApp.borderColor,
+      ))),
       child: Column(
         children: hours.map((hour) {
           return SizedBox(
@@ -25,7 +23,10 @@ class TimeColumn extends StatelessWidget {
               alignment: Alignment.topRight,
               child: Text(
                 '${hour.toString().padLeft(2, '0')}:00',
-                style: TextStyle(fontSize: 12, color: DataApp.mainColor, fontWeight: FontWeight.w900),
+                style: TextStyle(
+                    fontSize: 12,
+                    color: DataApp.mainColor,
+                    fontWeight: FontWeight.w900),
               ),
             ),
           );

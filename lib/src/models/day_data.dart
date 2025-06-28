@@ -1,7 +1,6 @@
-
 import 'package:flutter/material.dart';
 
-class DayData extends ChangeNotifier{
+class DayData extends ChangeNotifier {
   int _hour;
   bool _isExpand = false;
 
@@ -22,5 +21,4 @@ class DayData extends ChangeNotifier{
     _isExpand = newValue;
     notifyListeners();
   }
-
 }

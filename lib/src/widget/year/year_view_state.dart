@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:multi_view_calendar/src/utils/click_utils.dart';
 import 'package:multi_view_calendar/src/utils/show_utils.dart';
@@ -19,9 +18,7 @@ class YearViewState extends State<YearView> {
   void _setYear(int year) {
     if (!mounted) return;
     _selectedYear = year;
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   void _pickYear() async {
@@ -29,8 +26,7 @@ class YearViewState extends State<YearView> {
         context: context,
         child: YearCalendarPicker(
           initialYear: _selectedYear,
-        )
-    );
+        ));
     if (year == null) return;
     _setYear(year);
   }
@@ -41,7 +37,9 @@ class YearViewState extends State<YearView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 15.0,),
+          const SizedBox(
+            height: 15.0,
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 10),
             child: ClickUtils(
@@ -55,16 +53,25 @@ class YearViewState extends State<YearView> {
                   children: [
                     Text(
                       "Year: $_selectedYear",
-                      style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
+                      style: const TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700),
                     ),
                     const SizedBox(width: 2.0),
-                    const Icon(Icons.keyboard_arrow_down, size: 20, color: Colors.grey,)
+                    const Icon(
+                      Icons.keyboard_arrow_down,
+                      size: 20,
+                      color: Colors.grey,
+                    )
                   ],
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 5.0,),
+          const SizedBox(
+            height: 5.0,
+          ),
           GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -77,12 +84,10 @@ class YearViewState extends State<YearView> {
               itemBuilder: (context, index) {
                 return RepaintBoundary(
                     child: MiniMonth(
-                        key: ValueKey("$_selectedYear${index+1}"),
-                        year: _selectedYear, month: index + 1
-                    )
-                );
-              }
-          ),
+                        key: ValueKey("$_selectedYear${index + 1}"),
+                        year: _selectedYear,
+                        month: index + 1));
+              }),
         ],
       ),
     );

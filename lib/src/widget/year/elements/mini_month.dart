@@ -14,7 +14,6 @@ class MiniMonth extends StatefulWidget {
 }
 
 class _MiniMonthState extends State<MiniMonth> {
-
   bool _loaded = false;
 
   @override
@@ -25,17 +24,20 @@ class _MiniMonthState extends State<MiniMonth> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     if (!_loaded) {
       return ShimmerEffectWidget.cover(
         subColor: Colors.grey[300]!,
         mainColor: Colors.grey[100]!,
         period: const Duration(milliseconds: 260),
         direction: ShimmerDirection.ttb,
-        child: Container(width: double.infinity, height: double.infinity, color: Colors.white, margin: const EdgeInsets.all(5.0),),
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          color: Colors.white,
+          margin: const EdgeInsets.all(5.0),
+        ),
       );
     }
 
@@ -44,7 +46,8 @@ class _MiniMonthState extends State<MiniMonth> {
     final startWeekday = firstDay.weekday;
 
     final days = List<DateTime?>.filled(startWeekday - 1, null) +
-        List.generate(totalDays, (i) => DateTime(widget.year, widget.month, i + 1));
+        List.generate(
+            totalDays, (i) => DateTime(widget.year, widget.month, i + 1));
 
     return Container(
       padding: const EdgeInsets.all(1),
@@ -58,8 +61,8 @@ class _MiniMonthState extends State<MiniMonth> {
           Text(
             TimeUtils.monthLabel(widget.month),
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 4),
           _buildWeekdaysHeader(),
@@ -79,12 +82,12 @@ class _MiniMonthState extends State<MiniMonth> {
                   child: Container(
                     decoration: DateUtils.isSameDay(day, DateTime.now())
                         ? BoxDecoration(
-                      border: Border.all(
-                        width: 1,
-                        color: DataApp.mainColor,
-                      ),
-                      borderRadius: BorderRadius.circular(3.0),
-                    )
+                            border: Border.all(
+                              width: 1,
+                              color: DataApp.mainColor,
+                            ),
+                            borderRadius: BorderRadius.circular(3.0),
+                          )
                         : null,
                     child: Text(
                       day?.day.toString() ?? '',

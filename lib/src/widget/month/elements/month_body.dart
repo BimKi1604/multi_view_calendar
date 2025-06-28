@@ -4,7 +4,13 @@ import 'package:multi_view_calendar/src/models/calendar_event.dart';
 import 'package:multi_view_calendar/src/utils/click_utils.dart';
 
 class MonthBody extends StatelessWidget {
-  const MonthBody({super.key, required this.days, required this.events, required this.onDaySelected, required this.dayDecoration, required this.getEventColor});
+  const MonthBody(
+      {super.key,
+      required this.days,
+      required this.events,
+      required this.onDaySelected,
+      required this.dayDecoration,
+      required this.getEventColor});
 
   final List<DateTime> days;
   final List<CalendarEvent> events;
@@ -24,14 +30,15 @@ class MonthBody extends StatelessWidget {
         ),
         itemBuilder: (context, index) {
           final day = days[index];
-          final dayEvents = events.where((e) => DateUtils.isSameDay(e.start, day)).toList();
+          final dayEvents =
+              events.where((e) => DateUtils.isSameDay(e.start, day)).toList();
 
           return Container(
             margin: const EdgeInsets.symmetric(horizontal: 3.0),
             padding: const EdgeInsets.symmetric(vertical: 2.0),
             decoration: dayDecoration(day),
             child: ClickUtils(
-              onTap: (){
+              onTap: () {
                 onDaySelected(day);
               },
               child: Column(
@@ -54,7 +61,8 @@ class MonthBody extends StatelessWidget {
                         itemBuilder: (context, idx) {
                           final event = dayEvents[idx];
                           return Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 2, vertical: 1),
                             decoration: BoxDecoration(
                               color: event.color != null
                                   ? event.color!.withOpacity(0.8)
@@ -65,7 +73,8 @@ class MonthBody extends StatelessWidget {
                               event.title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 10, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 10, color: Colors.white),
                             ),
                           );
                         },

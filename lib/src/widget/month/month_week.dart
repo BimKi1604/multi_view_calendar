@@ -16,4 +16,3 @@ class MonthView extends StatefulWidget {
   @override
   State<MonthView> createState() => MonthViewState();
 }
-

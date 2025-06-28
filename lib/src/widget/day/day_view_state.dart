@@ -52,8 +52,7 @@ class DayViewState extends State<DayView> {
         child: PrettyDayPicker(
           initialDate: _selectedDate,
         ),
-        color: Colors.white
-    );
+        color: Colors.white);
     if (month == null) return;
     if (!mounted) return;
     setState(() {
@@ -65,8 +64,10 @@ class DayViewState extends State<DayView> {
     if (events != null) {
       CalendarEvent event = await ShowUtils.showDialogWidget(
           context: context,
-          child: SelectEventGroup(events: events,)
-      );
+          child: SelectEventGroup(
+            events: events,
+          ));
+      if (!mounted) return;
       ShowUtils.showFullScreenDialog(context, child: EventAction(event: event));
       return;
     }
@@ -79,7 +80,8 @@ class DayViewState extends State<DayView> {
       day: _selectedDate,
       totalEvents: widget.events,
     );
-    final List<PositionedEvent> positionedEvents = _calculateEventPositions(eventsFilter);
+    final List<PositionedEvent> positionedEvents =
+        _calculateEventPositions(eventsFilter);
     final Size screenSize = MediaQuery.of(context).size;
 
     return Stack(
@@ -94,7 +96,7 @@ class DayViewState extends State<DayView> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: ClickUtils(
-                    onTap: (){
+                    onTap: () {
                       _onShowSelectedDate();
                     },
                     child: Padding(
@@ -103,17 +105,26 @@ class DayViewState extends State<DayView> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            TimeUtils.formatMonthYear(_selectedDate, format: "MMM d, yyyy"),
-                            style: const TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w700),
+                            TimeUtils.formatMonthYear(_selectedDate,
+                                format: "MMM d, yyyy"),
+                            style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700),
                           ),
                           const SizedBox(width: 2.0),
-                          const Icon(Icons.keyboard_arrow_down, size: 20, color: Colors.grey,)
+                          const Icon(
+                            Icons.keyboard_arrow_down,
+                            size: 20,
+                            color: Colors.grey,
+                          )
                         ],
                       ),
                     ),
                   ),
                 ),
               ),
+
               /// lazy scroll horizontal week view
               Visibility(
                 visible: widget.onlyDay,
@@ -124,6 +135,7 @@ class DayViewState extends State<DayView> {
                   selectedDate: _selectedDate,
                 ),
               ),
+
               /// body day view
               Stack(
                 children: [
@@ -135,8 +147,7 @@ class DayViewState extends State<DayView> {
                     children: [
                       /// Left Time Column
                       Visibility(
-                          visible: widget.onlyDay,
-                          child: const TimeColumn()),
+                          visible: widget.onlyDay, child: const TimeColumn()),
 
                       /// Scrollable horizontal day columns
                       Expanded(
@@ -146,11 +157,11 @@ class DayViewState extends State<DayView> {
                             children: [
                               if (widget.showTimeLabels) const DayTimeLines(),
                               ...positionedEvents.map((e) => DayViewEventTile(
-                                positionedEvent: e,
-                                actionEvent: (events) {
-                                  _onActionEvent(events: events);
-                                },
-                              )),
+                                    positionedEvent: e,
+                                    actionEvent: (events) {
+                                      _onActionEvent(events: events);
+                                    },
+                                  )),
                             ],
                           ),
                         ),
@@ -169,11 +180,9 @@ class DayViewState extends State<DayView> {
             right: 15,
             child: Container(
               decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: DataApp.mainColor
-              ),
+                  shape: BoxShape.circle, color: DataApp.mainColor),
               child: ClickUtils(
-                onTap: (){
+                onTap: () {
                   _onActionEvent();
                 },
                 borderRadius: BorderRadius.circular(50.0),
@@ -192,18 +201,38 @@ class DayViewState extends State<DayView> {
   List<PositionedEvent> _calculateEventPositions(List<CalendarEvent> events) {
     final List<PositionedEvent> positioned = [];
     final double minuteHeight = DataApp.heightEvent / 60;
-    final groups = _groupOverlappingEvents(events); /// group events by overlap
+    final groups = _groupOverlappingEvents(events);
 
-    for (final group in groups) { /// group events by overlap
-      if (group.isEmpty) continue; /// skip empty groups
-      final eventStartEarliest = group.reduce((a, b) => a.start.isBefore(b.start) ? a : b); /// find earliest start
-      final eventEndLatest = group.reduce((a, b) => a.end.isAfter(b.end) ? a : b); /// find latest end
-      final int startMinutes = eventStartEarliest.start.hour * 60 + eventStartEarliest.start.minute;
-      final int endMinutes = (TimeUtils.isPassDay(eventStartEarliest.start, eventEndLatest.end)
-          ? (24 + eventEndLatest.end.difference(eventStartEarliest.start).inHours.abs())
-          : eventEndLatest.end.hour) * 60 + eventEndLatest.end.minute;
+    /// group events by overlap
+
+    for (final group in groups) {
+      /// group events by overlap
+      if (group.isEmpty) continue;
+
+      /// skip empty groups
+      final eventStartEarliest =
+          group.reduce((a, b) => a.start.isBefore(b.start) ? a : b);
+
+      /// find earliest start
+      final eventEndLatest =
+          group.reduce((a, b) => a.end.isAfter(b.end) ? a : b);
+
+      /// find latest end
+      final int startMinutes =
+          eventStartEarliest.start.hour * 60 + eventStartEarliest.start.minute;
+      final int endMinutes =
+          (TimeUtils.isPassDay(eventStartEarliest.start, eventEndLatest.end)
+                      ? (24 +
+                          eventEndLatest.end
+                              .difference(eventStartEarliest.start)
+                              .inHours
+                              .abs())
+                      : eventEndLatest.end.hour) *
+                  60 +
+              eventEndLatest.end.minute;
       final double top = startMinutes * minuteHeight;
-      final double height = (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
+      final double height =
+          (endMinutes - startMinutes).clamp(15.0, 1440.0) * minuteHeight;
       positioned.add(PositionedEvent(
         events: group,
         top: top,
@@ -215,8 +244,10 @@ class DayViewState extends State<DayView> {
     return positioned;
   }
 
-  List<List<CalendarEvent>> _groupOverlappingEvents(List<CalendarEvent> events) {
-    final sorted = List<CalendarEvent>.from(events)..sort((a, b) => a.start.compareTo(b.start));
+  List<List<CalendarEvent>> _groupOverlappingEvents(
+      List<CalendarEvent> events) {
+    final sorted = List<CalendarEvent>.from(events)
+      ..sort((a, b) => a.start.compareTo(b.start));
     final List<List<CalendarEvent>> group = [];
 
     for (final event in sorted) {
@@ -238,7 +269,8 @@ class DayViewState extends State<DayView> {
     return group;
   }
 
-  bool _eventsOverlap(CalendarEvent a, CalendarEvent b) { /// check event overlap
+  bool _eventsOverlap(CalendarEvent a, CalendarEvent b) {
+    /// check event overlap
     if (!DateUtils.isSameDay(a.start, b.start)) return false;
     return a.start.isBefore(b.end) && b.start.isBefore(a.end);
   }

@@ -32,7 +32,6 @@ class MonthEventTile extends StatelessWidget {
             Expanded(
               child: Container(
                 margin: const EdgeInsets.symmetric(vertical: 8),
-
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
@@ -45,7 +44,7 @@ class MonthEventTile extends StatelessWidget {
                   ],
                 ),
                 child: ClickUtils(
-                  onTap: (){
+                  onTap: () {
                     callback();
                   },
                   child: Padding(
@@ -67,11 +66,13 @@ class MonthEventTile extends StatelessWidget {
                               const SizedBox(height: 4),
                               Row(
                                 children: [
-                                  const Icon(Icons.access_time, size: 14, color: Colors.grey),
+                                  const Icon(Icons.access_time,
+                                      size: 14, color: Colors.grey),
                                   const SizedBox(width: 4),
                                   Flexible(
                                     child: Text(
-                                      TimeUtils.formatMonthYear(start ,format: "dd/MM/yyyy HH:mm"),
+                                      TimeUtils.formatMonthYear(start,
+                                          format: "dd/MM/yyyy HH:mm"),
                                       style: const TextStyle(
                                         color: Colors.grey,
                                         fontSize: 12,
@@ -83,11 +84,13 @@ class MonthEventTile extends StatelessWidget {
                               const SizedBox(height: 4),
                               Row(
                                 children: [
-                                  const Icon(Icons.flag, size: 14, color: Colors.grey),
+                                  const Icon(Icons.flag,
+                                      size: 14, color: Colors.grey),
                                   const SizedBox(width: 4),
                                   Flexible(
                                     child: Text(
-                                      TimeUtils.formatMonthYear(end ,format: "dd/MM/yyyy HH:mm"),
+                                      TimeUtils.formatMonthYear(end,
+                                          format: "dd/MM/yyyy HH:mm"),
                                       style: const TextStyle(
                                         color: Colors.grey,
                                         fontSize: 12,

@@ -3,7 +3,6 @@ import 'package:multi_view_calendar/src/data/data.dart';
 import 'package:multi_view_calendar/src/utils/click_utils.dart';
 
 class MonthTitleTask extends StatelessWidget {
-
   final String title;
   final VoidCallback onAdd;
 
@@ -26,7 +25,6 @@ class MonthTitleTask extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-
           const SizedBox(width: 12),
           Expanded(
             child: Divider(

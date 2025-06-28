@@ -15,21 +15,30 @@ class WeekdayHeader extends StatelessWidget {
       children: weekdays
           .map(
             (day) => Expanded(
-          child: Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: todayShortWeekday == day ? DataApp.mainColor : Colors.grey.shade300, width: todayShortWeekday == day ? 2 : 1),
+              child: Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                        color: todayShortWeekday == day
+                            ? DataApp.mainColor
+                            : Colors.grey.shade300,
+                        width: todayShortWeekday == day ? 2 : 1),
+                  ),
+                ),
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Text(
+                  day,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: todayShortWeekday == day
+                          ? DataApp.mainColor
+                          : Colors.grey),
+                ),
               ),
             ),
-            padding: const EdgeInsets.only(bottom: 10),
-            child: Text(
-              day,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: todayShortWeekday == day ? DataApp.mainColor : Colors.grey),
-            ),
-          ),
-        ),
-      )
+          )
           .toList(),
     );
   }

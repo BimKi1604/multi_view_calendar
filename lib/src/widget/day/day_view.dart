@@ -7,7 +7,9 @@ class DayView extends StatefulWidget {
   final DateTime date;
   final List<CalendarEvent> events;
   final bool showTimeLabels;
-  final bool onlyDay; /// Just show itself
+  final bool onlyDay;
+
+  /// Just show itself
 
   const DayView({
     super.key,
@@ -20,4 +22,3 @@ class DayView extends StatefulWidget {
   @override
   State<DayView> createState() => DayViewState();
 }
-

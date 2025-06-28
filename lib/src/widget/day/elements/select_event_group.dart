@@ -16,7 +16,10 @@ class SelectEventGroup extends StatelessWidget {
         children: [
           Text(
             'Select event',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
           Flexible(
@@ -28,19 +31,24 @@ class SelectEventGroup extends StatelessWidget {
                 final event = events[index];
                 return ListTile(
                   contentPadding: const EdgeInsets.symmetric(horizontal: 3),
-                  leading: const Icon(Icons.event_note, color: Colors.blueAccent),
-                  title: Text(event.title, style: const TextStyle(fontWeight: FontWeight.w600)),
+                  leading:
+                      const Icon(Icons.event_note, color: Colors.blueAccent),
+                  title: Text(event.title,
+                      style: const TextStyle(fontWeight: FontWeight.w600)),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         DateFormat('dd MMMM, yyyy').format(event.start),
-                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
-                      if (event.description != null && event.description!.isNotEmpty)
+                      if (event.description != null &&
+                          event.description!.isNotEmpty)
                         Text(
                           event.description!,
-                          style: const TextStyle(fontSize: 13, color: Colors.black87),
+                          style: const TextStyle(
+                              fontSize: 13, color: Colors.black87),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),

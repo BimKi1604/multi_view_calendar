@@ -1,4 +1,3 @@
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -20,7 +19,7 @@ class TimeUtils {
 
     return List.generate(
       42,
-          (index) => start.add(Duration(days: index)),
+      (index) => start.add(Duration(days: index)),
     );
   }
 
@@ -42,11 +41,14 @@ class TimeUtils {
   static double get currentTimeTop {
     final now = DateTime.now();
     final minutes = now.hour * 60 + now.minute;
-    final minutesHeight = DataApp.heightEvent / 60; /// pixel each minute
+    final minutesHeight = DataApp.heightEvent / 60;
+
+    /// pixel each minute
     return minutes * minutesHeight;
   }
 
-  static List<CalendarEvent> getEventDay({ required DateTime day, required List<CalendarEvent> totalEvents }) {
+  static List<CalendarEvent> getEventDay(
+      {required DateTime day, required List<CalendarEvent> totalEvents}) {
     List<CalendarEvent> events = List.empty(growable: true);
     List<CalendarEvent> eventsPreDay = List.empty(growable: true);
 
@@ -56,7 +58,8 @@ class TimeUtils {
         events.add(event);
         continue;
       }
-      if (DateUtils.isSameDay(event.start, day.subtract(const Duration(days: 1)))) {
+      if (DateUtils.isSameDay(
+          event.start, day.subtract(const Duration(days: 1)))) {
         eventsPreDay.add(event);
         continue;
       }
@@ -65,7 +68,9 @@ class TimeUtils {
     /// Filter events that pass the day
     for (final event in eventsPreDay) {
       if (!TimeUtils.isPassDay(event.start, event.end)) continue;
-      events.add(event.copyWith(start: DateTime(event.end.year, event.end.month, event.end.day, 0, 0)));
+      events.add(event.copyWith(
+          start:
+              DateTime(event.end.year, event.end.month, event.end.day, 0, 0)));
     }
 
     return events;
@@ -84,13 +89,24 @@ class TimeUtils {
 
   static String monthLabel(int month) {
     const monthNames = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return monthNames[month - 1];
   }
 
-  static Future<DateTime?> showDateTimePicker(BuildContext context, DateTime? initial) async {
+  static Future<DateTime?> showDateTimePicker(
+      BuildContext context, DateTime? initial) async {
     final now = DateTime.now();
     final pickedDate = await showDatePicker(
       context: context,
@@ -100,6 +116,8 @@ class TimeUtils {
     );
 
     if (pickedDate == null) return null;
+
+    if (!context.mounted) return null;
 
     final pickedTime = await showTimePicker(
       context: context,
@@ -125,7 +143,8 @@ class TimeUtils {
   static bool isSameWeek(DateTime a, DateTime b) {
     final mondayA = a.subtract(Duration(days: a.weekday - 1));
     final mondayB = b.subtract(Duration(days: b.weekday - 1));
-    return mondayA.year == mondayB.year && mondayA.month == mondayB.month && mondayA.day == mondayB.day;
+    return mondayA.year == mondayB.year &&
+        mondayA.month == mondayB.month &&
+        mondayA.day == mondayB.day;
   }
 }
-

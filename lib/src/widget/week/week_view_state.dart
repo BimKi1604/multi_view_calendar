@@ -54,7 +54,7 @@ class WeekViewState extends State<WeekView> {
   Widget build(BuildContext context) {
     final days = List.generate(
       7,
-          (index) => weekStartDate.add(Duration(days: index)),
+      (index) => weekStartDate.add(Duration(days: index)),
     );
     return Stack(
       children: [
@@ -66,7 +66,8 @@ class WeekViewState extends State<WeekView> {
               padding: const EdgeInsets.all(12),
               child: Text(
                 _weekRangeText(days.first, days.last),
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
             LazyWeekSelector(
@@ -77,7 +78,9 @@ class WeekViewState extends State<WeekView> {
                 });
               },
             ),
-            const SizedBox(height: 10.0,),
+            const SizedBox(
+              height: 10.0,
+            ),
             // Grid: Time column + Scrollable Day columns
             Expanded(
               child: Column(
@@ -96,8 +99,7 @@ class WeekViewState extends State<WeekView> {
                         itemBuilder: (_, index) {
                           final date = days[index];
                           return WeekRowItem(date: date);
-                        }
-                    ),
+                        }),
                   ),
                   Expanded(
                     child: SingleChildScrollView(
@@ -145,10 +147,9 @@ class WeekViewState extends State<WeekView> {
                                           decoration: BoxDecoration(
                                             border: Border(
                                                 right: BorderSide(
-                                                  color: DataApp.borderColor,
-                                                  width: 1,
-                                                )
-                                            ),
+                                              color: DataApp.borderColor,
+                                              width: 1,
+                                            )),
                                           ),
                                           child: DayView(
                                             key: ValueKey(day),
@@ -177,12 +178,10 @@ class WeekViewState extends State<WeekView> {
           bottom: 15,
           right: 15,
           child: Container(
-            decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: DataApp.mainColor
-            ),
+            decoration:
+                BoxDecoration(shape: BoxShape.circle, color: DataApp.mainColor),
             child: ClickUtils(
-              onTap: (){
+              onTap: () {
                 _onActionEvent();
               },
               borderRadius: BorderRadius.circular(50.0),

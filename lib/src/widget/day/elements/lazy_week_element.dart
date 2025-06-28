@@ -3,7 +3,11 @@ import 'package:intl/intl.dart';
 import 'package:multi_view_calendar/src/data/data.dart';
 
 class LazyWeekElement extends StatelessWidget {
-  const LazyWeekElement({super.key, required this.weekStart, required this.setSelected, required this.selectedDate});
+  const LazyWeekElement(
+      {super.key,
+      required this.weekStart,
+      required this.setSelected,
+      required this.selectedDate});
 
   final DateTime weekStart;
   final Function(DateTime) setSelected;

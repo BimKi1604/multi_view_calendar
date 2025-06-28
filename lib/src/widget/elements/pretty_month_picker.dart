@@ -43,7 +43,8 @@ class _PrettyMonthPickerState extends State<PrettyMonthPicker> {
               ),
               Text(
                 '$selectedYear',
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               IconButton(
                 icon: const Icon(Icons.chevron_right, size: 28),
@@ -65,11 +66,14 @@ class _PrettyMonthPickerState extends State<PrettyMonthPicker> {
                   selectedYear == DateTime.now().year;
 
               return GestureDetector(
-                onTap: () => Navigator.of(context).pop(DateTime(selectedYear, month)),
+                onTap: () =>
+                    Navigator.of(context).pop(DateTime(selectedYear, month)),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   decoration: BoxDecoration(
-                    color: isCurrentMonth ? Colors.blueAccent.withOpacity(0.2) : Colors.grey[100],
+                    color: isCurrentMonth
+                        ? Colors.blueAccent.withOpacity(0.2)
+                        : Colors.grey[100],
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: isCurrentMonth ? Colors.blue : Colors.transparent,

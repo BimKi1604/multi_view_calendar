@@ -3,7 +3,8 @@ import 'package:multi_view_calendar/src/utils/time_utils.dart';
 import 'package:multi_view_calendar/src/widget/day/elements/lazy_week_element.dart';
 
 class LazyWeekView extends StatefulWidget {
-  const LazyWeekView({super.key, required this.setSelected, required this.selectedDate});
+  const LazyWeekView(
+      {super.key, required this.setSelected, required this.selectedDate});
 
   final Function(DateTime) setSelected;
   final DateTime selectedDate;
@@ -25,7 +26,8 @@ class _LazyWeekViewState extends State<LazyWeekView> {
 
     _controller.addListener(() {
       // Scroll to right → load next week
-      if (_controller.position.pixels >= _controller.position.maxScrollExtent - 100) {
+      if (_controller.position.pixels >=
+          _controller.position.maxScrollExtent - 100) {
         _addWeekToEnd();
       }
 
@@ -52,21 +54,31 @@ class _LazyWeekViewState extends State<LazyWeekView> {
   }
 
   void _scrollToSelectedDateWeek() {
-    final monday = widget.selectedDate.subtract(Duration(days: widget.selectedDate.weekday - 1));
+    final monday = widget.selectedDate
+        .subtract(Duration(days: widget.selectedDate.weekday - 1));
 
     /// if weeks don't contain week => add middle
     if (!_weeks.contains(monday)) {
       setState(() {
         _weeks.clear();
-        _weeks.add(monday.subtract(const Duration(days: 7))); /// prev week
-        _weeks.add(monday); /// present week
-        _weeks.add(monday.add(const Duration(days: 7))); /// next week
+        _weeks.add(monday.subtract(const Duration(days: 7)));
+
+        /// prev week
+        _weeks.add(monday);
+
+        /// present week
+        _weeks.add(monday.add(const Duration(days: 7)));
+
+        /// next week
       });
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _controller.jumpTo(weekWidth); /// jump to middle week
+        _controller.jumpTo(weekWidth);
+
+        /// jump to middle week
       });
-    } else { /// contain week
+    } else {
+      /// contain week
       final index = _weeks.indexOf(monday);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _controller.animateTo(

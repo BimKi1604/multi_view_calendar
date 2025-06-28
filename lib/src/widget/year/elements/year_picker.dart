@@ -35,7 +35,8 @@ class _YearCalendarPickerState extends State<YearCalendarPicker> {
       final rowIndex = (selectedIndex / crossAxisCount).floor();
       final targetScrollOffset = rowIndex * (itemHeight + spacing);
 
-      _scrollController.jumpTo(targetScrollOffset - 150); // để selected nằm gần giữa
+      _scrollController
+          .jumpTo(targetScrollOffset - 150); // để selected nằm gần giữa
     });
   }
 
@@ -87,7 +88,8 @@ class _YearCalendarPickerState extends State<YearCalendarPicker> {
                       style: TextStyle(
                         fontSize: 16,
                         color: isSelected ? Colors.white : Colors.black,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
                       ),
                     ),
                   ),

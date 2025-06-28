@@ -28,7 +28,8 @@ class _LazyWeekSelectorState extends State<LazyWeekSelector> {
     _initWeeks();
 
     _controller.addListener(() {
-      if (_controller.position.pixels >= _controller.position.maxScrollExtent - 100) {
+      if (_controller.position.pixels >=
+          _controller.position.maxScrollExtent - 100) {
         _addWeekToEnd();
       }
 

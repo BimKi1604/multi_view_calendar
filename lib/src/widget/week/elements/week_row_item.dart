@@ -15,12 +15,7 @@ class WeekRowItem extends StatelessWidget {
       width: DataApp.widthEvent,
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        border: const Border(
-            right: BorderSide(
-                width: 1,
-                color: Colors.white
-            )
-        ),
+        border: const Border(right: BorderSide(width: 1, color: Colors.white)),
         color: DataApp.mainColor,
       ),
       child: Center(
@@ -32,15 +27,18 @@ class WeekRowItem extends StatelessWidget {
               Text(
                 '${TimeUtils.weekdayLabel(date.weekday)}\n${date.day}/${date.month}',
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.white),
               ),
               const SizedBox(width: 7.0),
               Visibility(
                   visible: TimeUtils.isToday(date),
                   child: ShowUtils.eventWidget(
-                      child: Icon(Icons.today, color: DataApp.iconColor, size: 11,)
-                  )
-              )
+                      child: Icon(
+                    Icons.today,
+                    color: DataApp.iconColor,
+                    size: 11,
+                  )))
             ],
           ),
         ),

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_view_calendar/src/data/calendar_view_type.dart';
@@ -27,7 +26,8 @@ class _PrettyDayPickerState extends State<PrettyDayPicker> {
     super.initState();
     _selectedDate = widget.initialDate;
     _firstDayOfMonth = DateTime(_selectedDate.year, _selectedDate.month, 1);
-    _daysInMonth = DateUtils.getDaysInMonth(_selectedDate.year, _selectedDate.month);
+    _daysInMonth =
+        DateUtils.getDaysInMonth(_selectedDate.year, _selectedDate.month);
   }
 
   void onChangedDayOfMonth(ChangedDay change) {
@@ -45,7 +45,8 @@ class _PrettyDayPickerState extends State<PrettyDayPicker> {
     });
 
     _firstDayOfMonth = _selectedDate;
-    _daysInMonth = DateUtils.getDaysInMonth(_selectedDate.year, _selectedDate.month);
+    _daysInMonth =
+        DateUtils.getDaysInMonth(_selectedDate.year, _selectedDate.month);
   }
 
   @override
@@ -61,28 +62,29 @@ class _PrettyDayPickerState extends State<PrettyDayPicker> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               ClickUtils(
-                  onTap: (){
+                  onTap: () {
                     onChangedDayOfMonth(ChangedDay.decrease);
                   },
                   borderRadius: BorderRadius.circular(50.0),
                   child: Container(
                     padding: const EdgeInsets.all(5.0),
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 1, color: Colors.grey.shade400)
-                    ),
-                    child: const Icon(Icons.chevron_left, size: 21, color: Colors.black),
-                  )
-              ),
+                        shape: BoxShape.circle,
+                        border:
+                            Border.all(width: 1, color: Colors.grey.shade400)),
+                    child: const Icon(Icons.chevron_left,
+                        size: 21, color: Colors.black),
+                  )),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 7.5),
                 child: Text(
                   DateFormat('MMMM yyyy').format(_firstDayOfMonth),
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
               ClickUtils(
-                  onTap: (){
+                  onTap: () {
                     onChangedDayOfMonth(ChangedDay.increase);
                   },
                   borderRadius: BorderRadius.circular(50.0),
@@ -90,11 +92,11 @@ class _PrettyDayPickerState extends State<PrettyDayPicker> {
                     padding: const EdgeInsets.all(5.0),
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(width: 1, color: Colors.grey.shade400)
-                    ),
-                    child: const Icon(Icons.chevron_right, size: 21, color: Colors.black),
-                  )
-              ),
+                        border:
+                            Border.all(width: 1, color: Colors.grey.shade400)),
+                    child: const Icon(Icons.chevron_right,
+                        size: 21, color: Colors.black),
+                  )),
             ],
           ),
         ),
@@ -115,7 +117,8 @@ class _PrettyDayPickerState extends State<PrettyDayPicker> {
             }
 
             final day = index - weekdayOffset + 1;
-            final date = DateTime(_firstDayOfMonth.year, _firstDayOfMonth.month, day);
+            final date =
+                DateTime(_firstDayOfMonth.year, _firstDayOfMonth.month, day);
             final isSelected = DateUtils.isSameDay(date, _selectedDate);
             final isToday = DateUtils.isSameDay(date, DateTime.now());
 
@@ -131,7 +134,9 @@ class _PrettyDayPickerState extends State<PrettyDayPicker> {
                 decoration: BoxDecoration(
                   color: isSelected ? DataApp.mainColor : Colors.white,
                   borderRadius: BorderRadius.circular(8),
-                  border: isToday ? Border.all(color: Colors.redAccent, width: 1.2) : null,
+                  border: isToday
+                      ? Border.all(color: Colors.redAccent, width: 1.2)
+                      : null,
                 ),
                 child: Stack(
                   alignment: Alignment.center,
@@ -139,17 +144,20 @@ class _PrettyDayPickerState extends State<PrettyDayPicker> {
                     Text(
                       day.toString(),
                       style: TextStyle(
-                        color: isSelected ? Colors.white : Colors.black87,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                        fontSize: 13
-                      ),
+                          color: isSelected ? Colors.white : Colors.black87,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontSize: 13),
                     ),
                     Visibility(
                       visible: isToday,
                       child: Positioned(
-                        top: 0,
-                        child: Text("Today", style: TextStyle(fontSize: 6, fontWeight: FontWeight.w900, color: DataApp.mainColor))
-                      ),
+                          top: 0,
+                          child: Text("Today",
+                              style: TextStyle(
+                                  fontSize: 6,
+                                  fontWeight: FontWeight.w900,
+                                  color: DataApp.mainColor))),
                     )
                   ],
                 ),

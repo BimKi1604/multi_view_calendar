@@ -9,21 +9,27 @@ class DayViewEventTile extends StatelessWidget {
   final PositionedEvent positionedEvent;
   final Function(List<CalendarEvent>) actionEvent;
 
-  const DayViewEventTile({super.key, required this.positionedEvent, required this.actionEvent});
+  const DayViewEventTile(
+      {super.key, required this.positionedEvent, required this.actionEvent});
 
-  String title(){
-   if (positionedEvent.events.length == 1) return positionedEvent.events.first.title;
-   String title = "";
-   for (final event in positionedEvent.events) {
-     title += "${event.title}\n";
-   }
-   return title;
+  String title() {
+    if (positionedEvent.events.length == 1) {
+      return positionedEvent.events.first.title;
+    }
+    String title = "";
+    for (final event in positionedEvent.events) {
+      title += "${event.title}\n";
+    }
+    return title;
   }
 
   Color color() {
     final Color defaultColor = DataApp.mainColor.withOpacity(0.9);
-    if (positionedEvent.events.length == 1) return positionedEvent.events.first.color ?? defaultColor;
-    List<Color> colors = positionedEvent.events.map((e) => e.color ?? defaultColor).toList();
+    if (positionedEvent.events.length == 1) {
+      return positionedEvent.events.first.color ?? defaultColor;
+    }
+    List<Color> colors =
+        positionedEvent.events.map((e) => e.color ?? defaultColor).toList();
     return ColorUtils.mixColors(colors);
   }
 
@@ -55,12 +61,12 @@ class DayViewEventTile extends StatelessWidget {
     );
   }
 
-  void _showTooltip(BuildContext context, List<CalendarEvent> events, Color color) {
+  void _showTooltip(
+      BuildContext context, List<CalendarEvent> events, Color color) {
     if (events.length == 1) {
       ShowUtils.tooltipSingleEvent(context, events.first, color);
       return;
     }
     ShowUtils.tooltipMulEvent(context, events, color);
   }
-
 }
