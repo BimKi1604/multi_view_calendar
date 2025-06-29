@@ -95,7 +95,7 @@ To install the `multi_view_calendar` package, add the following to your `pubspec
 
 ```yaml
 dependencies:
-  multi_view_calendar: ^1.0.1
+  multi_view_calendar: ^1.0.2
 ```
 
 ## 📦 Supported SDKs
