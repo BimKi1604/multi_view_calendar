@@ -1,6 +1,6 @@
 name: multi_view_calendar
 description: "A powerful Flutter calendar package with week, month, and year views. Highly customizable, responsive, and ideal for productivity, planner, and scheduling apps."
-version: 1.0.0
+version: 1.0.1
 license: MIT
 homepage: https://github.com/BimKi1604/multi_view_calendar
 repository: https://github.com/BimKi1604/multi_view_calendar
